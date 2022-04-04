@@ -1,9 +1,19 @@
-pub mod geo;
+pub mod testing;
 pub mod consts {
     pub const OS_PATH_SEPARATOR: &str = if cfg!(windows) { r"\" } else { "/" };
     pub const NUMS: &str = r"0123456789";
-    pub const DEGREES_CHARSET: &str = r"0.-123456789";
+    pub const FLOAT_CHARSET: &str = r"0.-123456789";
     pub const ABS_FLOAT_CHARSET: &str = r"0.123456789";
+}
+
+pub mod usize {
+    pub mod consts {
+        pub const APPROX_CM_IN_SECOND: usize = 3087;
+        pub const ARC_SECONDS_IN_360_DEGREES_USIZE: usize = 1296000;
+        pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999;
+        pub const ARC_SECONDS_IN_180_DEGREES_USIZE: usize = 648000;
+        pub const ARC_SECONDS_IN_180_DEGREES_INDEXED: usize = 647999;
+    }
 }
 
 pub mod f64 {
@@ -14,13 +24,8 @@ pub mod f64 {
 
         pub const LATITUDE_LIMIT: f64 = 90.0; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
         pub const LONGITUDE_LIMIT: f64 = 180.0; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
-        pub const APPROX_CM_IN_SECOND: usize = 3087;
-        pub const ARC_SECONDS_IN_360_DEGREES_USIZE: usize = 1296000;
         pub const ARC_SECONDS_IN_360_DEGREES_F64: f64 = 1296000.0;
-        pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999;
-        pub const ARC_SECONDS_IN_180_DEGREES_USIZE: usize = 648000;
         pub const ARC_SECONDS_IN_180_DEGREES_F64: f64 = 648000.0;
-        pub const ARC_SECONDS_IN_180_DEGREES_INDEXED: usize = 647999;
         pub const EARTH_RADIUS_KM: f64 = 6378.137;
         pub const EARTH_RADIUS_M: f64 = 6378137.0;
         pub const DEG_TO_RAD: f64 = PI / 180.0;
@@ -44,7 +49,7 @@ pub mod f64 {
     ///left hand side of the decimal point absolute 
     #[inline]
     pub fn lhs_abs(input: f64) -> f64 {
-        input as usize as f64
+        input.abs() as usize as f64
     }
 
     ///split left and right side of the decimal point
@@ -82,6 +87,24 @@ pub mod f64 {
     pub fn normalised_to_index(input: f64, max: usize) -> usize {
         (max as f64 * input) as usize
     }
+
+    ///shifts the value from (-90 to 90) to (0 to 180)
+    #[inline]
+    pub fn indexify_lat(lat: f64) -> f64 {
+        lat.abs() + 90.0
+    }
+    
+    ///shifts the value from (-180 to 180) to (0 to 360)
+    #[inline]
+    pub fn indexify_long(long: f64) -> f64 {
+        long.abs() + 180.0
+    }
+    
+    ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
+    #[inline]
+    pub fn indexify_lat_long(lat: f64, long: f64) -> (f64, f64) {
+        (indexify_lat(lat), indexify_long(long))
+    }
 }
 
 pub mod f32 {
@@ -92,13 +115,8 @@ pub mod f32 {
 
         pub const LATITUDE_LIMIT: f32 = 90.0; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
         pub const LONGITUDE_LIMIT: f32 = 180.0; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
-        pub const APPROX_CM_IN_SECOND: usize = 3087;
-        pub const ARC_SECONDS_IN_360_DEGREES_USIZE: usize = 1296000;
         pub const ARC_SECONDS_IN_360_DEGREES_F32: f32 = 1296000.0;
-        pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999;
-        pub const ARC_SECONDS_IN_180_DEGREES_USIZE: usize = 648000;
         pub const ARC_SECONDS_IN_180_DEGREES_F32: f32 = 648000.0;
-        pub const ARC_SECONDS_IN_180_DEGREES_INDEXED: usize = 647999;
         pub const EARTH_RADIUS_KM: f32 = 6378.137;
         pub const EARTH_RADIUS_M: f32 = 6378137.0;
         pub const DEG_TO_RAD: f32 = PI / 180.0;
@@ -121,7 +139,7 @@ pub mod f32 {
     ///left hand side of the decimal point absolute
     #[inline]
     pub fn lhs_abs(input: f32) -> f32 {
-        input as usize as f32
+        input.abs() as usize as f32
     }
 
     ///split left and right side of the decimal point
@@ -158,5 +176,23 @@ pub mod f32 {
     #[inline]
     pub fn normalised_to_index(input: f32, max: usize) -> usize {
         (max as f32 * input) as usize
+    }
+
+    ///shifts the value from (-90 to 90) to (0 to 180)
+    #[inline]
+    pub fn indexify_lat(lat: f32) -> f32 {
+        lat.abs() + 90.0
+    }
+    
+    ///shifts the value from (-180 to 180) to (0 to 360)
+    #[inline]
+    pub fn indexify_long(long: f32) -> f32 {
+        long.abs() + 180.0
+    }
+    
+    ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
+    #[inline]
+    pub fn indexify_lat_long(lat: f32, long: f32) -> (f32, f32) {
+        (indexify_lat(lat), indexify_long(long))
     }
 }
