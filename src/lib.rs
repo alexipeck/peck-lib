@@ -91,13 +91,13 @@ pub mod f64 {
     ///shifts the value from (-90 to 90) to (0 to 180)
     #[inline]
     pub fn indexify_lat(lat: f64) -> f64 {
-        lat.abs() + 90.0
+        lat + 90.0
     }
     
     ///shifts the value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_long(long: f64) -> f64 {
-        long.abs() + 180.0
+        long + 180.0
     }
     
     ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
@@ -181,13 +181,13 @@ pub mod f32 {
     ///shifts the value from (-90 to 90) to (0 to 180)
     #[inline]
     pub fn indexify_lat(lat: f32) -> f32 {
-        lat.abs() + 90.0
+        lat + 90.0
     }
     
     ///shifts the value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_long(long: f32) -> f32 {
-        long.abs() + 180.0
+        long + 180.0
     }
     
     ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)

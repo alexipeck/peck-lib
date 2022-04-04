@@ -2,14 +2,14 @@ pub mod tests {
 
     #[test]
     fn test_rhs_f64() {
-        assert_eq!(crate::f64::rhs(57.29577951308232), 0.29577951308232);
-        assert_eq!(crate::f64::rhs(-57.29577951308232), 0.29577951308232);
+        assert_eq!(crate::f64::rhs(57.29577951308232), 0.29577951308232286);
+        assert_eq!(crate::f64::rhs(-57.29577951308232), 0.29577951308232286);
     }
 
     #[test]
     fn test_rhs_f32() {
-        assert_eq!(crate::f32::rhs(57.29578), 0.29578);
-        assert_eq!(crate::f32::rhs(-57.29578), 0.29578);
+        assert_eq!(crate::f32::rhs(57.29578), 0.29578018);
+        assert_eq!(crate::f32::rhs(-57.29578), 0.29578018);
     }
 
     #[test]
@@ -38,34 +38,34 @@ pub mod tests {
 
     #[test]
     fn test_split_f64() {
-        assert_eq!(crate::f64::split(57.29577951308232), (57.0, 0.29577951308232));
-        assert_eq!(crate::f64::split(-57.29577951308232), (-57.0, 0.29577951308232));
+        assert_eq!(crate::f64::split(57.29577951308232), (57.0, 0.29577951308232286));
+        assert_eq!(crate::f64::split(-57.29577951308232), (-57.0, 0.29577951308232286));
     }
 
     #[test]
     fn test_split_f32() {
-        assert_eq!(crate::f32::split(57.29578), (57.0, 0.29578));
-        assert_eq!(crate::f32::split(-57.29578), (-57.0, 0.29578));
+        assert_eq!(crate::f32::split(57.29578), (57.0, 0.29578018));
+        assert_eq!(crate::f32::split(-57.29578), (-57.0, 0.29578018));
     }
 
     #[test]
     fn test_split_abs_f64() {
-        assert_eq!(crate::f64::split_abs(57.29577951308232), (57.0, 0.29577951308232));
-        assert_eq!(crate::f64::split_abs(-57.29577951308232), (57.0, 0.29577951308232));
+        assert_eq!(crate::f64::split_abs(57.29577951308232), (57.0, 0.29577951308232286));
+        assert_eq!(crate::f64::split_abs(-57.29577951308232), (57.0, 0.29577951308232286));
     }
 
     #[test]
     fn test_split_abs_f32() {
-        assert_eq!(crate::f32::split_abs(57.29578), (57.0, 0.29578));
-        assert_eq!(crate::f32::split_abs(-57.29578), (57.0, 0.29578));
+        assert_eq!(crate::f32::split_abs(57.29578), (57.0, 0.29578018));
+        assert_eq!(crate::f32::split_abs(-57.29578), (57.0, 0.29578018));
     }
 
     #[test]
     fn test_to_radians_f64() {
         let input: f64 = 100.0;//100.0000000003249
         assert_eq!(input.to_radians(), crate::f64::to_radians(input));
-        assert_eq!(crate::f64::to_radians(input), 1.745329252);
-        assert_eq!(crate::f64::to_radians(-input), -1.745329252);
+        assert_eq!(crate::f64::to_radians(input), 1.7453292519943295);
+        assert_eq!(crate::f64::to_radians(-input), -1.7453292519943295);
     }
 
     #[test]
@@ -108,52 +108,58 @@ pub mod tests {
 
     #[test]
     fn test_normalised_to_index_f64() {
-        let input: f64 = -41.52867390693811;
-        let lat_indexed: f64 = crate::f64::indexify_lat(input);
-        let lat_seconds = lat_indexed * 60.0 * 60.0;
-        let normalised_index = crate::f64::normalise(lat_seconds, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64);
-        let lat_seconds_index = crate::f64::normalised_to_index(normalised_index, crate::usize::consts::ARC_SECONDS_IN_360_DEGREES_USIZE);
-        assert_eq!(lat_seconds_index, 473503);
+        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(-90.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), 0);
+        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(0.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2);
+        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(90.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE);
     }
 
     #[test]
     fn test_normalised_to_index_f32() {
-        let input: f32 = -41.528675;
-        let lat_indexed: f32 = crate::f32::indexify_lat(input);
-        let lat_seconds = lat_indexed * 60.0 * 60.0;
-        let normalised_index = crate::f32::normalise(lat_seconds, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32);
-        let lat_seconds_index = crate::f32::normalised_to_index(normalised_index, crate::usize::consts::ARC_SECONDS_IN_360_DEGREES_USIZE);
-        assert_eq!(lat_seconds_index, 473503);
+        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(-90.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), 0);
+        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(0.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2);
+        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(90.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE);
     }
 
     #[test]
     fn test_indexify_lat_f64() {
-
+        assert_eq!(crate::f64::indexify_lat(-90.0), 0.0);
+        assert_eq!(crate::f64::indexify_lat(0.0), 90.0);
+        assert_eq!(crate::f64::indexify_lat(90.0), 180.0);
     }
 
     #[test]
     fn test_indexify_lat_f32() {
-
+        assert_eq!(crate::f32::indexify_lat(-90.0), 0.0);
+        assert_eq!(crate::f32::indexify_lat(0.0), 90.0);
+        assert_eq!(crate::f32::indexify_lat(90.0), 180.0);
     }
     
     #[test]
     fn test_indexify_long_f64() {
-
+        assert_eq!(crate::f64::indexify_long(-180.0), 0.0);
+        assert_eq!(crate::f64::indexify_long(0.0), 180.0);
+        assert_eq!(crate::f64::indexify_long(180.0), 360.0);
     }
 
     #[test]
     fn test_indexify_long_f32() {
-
+        assert_eq!(crate::f32::indexify_long(-180.0), 0.0);
+        assert_eq!(crate::f32::indexify_long(0.0), 180.0);
+        assert_eq!(crate::f32::indexify_long(180.0), 360.0);
     }
 
     #[test]
     fn test_indexify_lat_long_f64() {
-
+        assert_eq!(crate::f64::indexify_lat_long(-90.0, -180.0), (0.0, 0.0));
+        assert_eq!(crate::f64::indexify_lat_long(0.0, 0.0), (90.0, 180.0));
+        assert_eq!(crate::f64::indexify_lat_long(90.0, 180.0), (180.0, 360.0));
     }
 
     #[test]
     fn test_indexify_lat_long_f32() {
-
+        assert_eq!(crate::f32::indexify_lat_long(-90.0, -180.0), (0.0, 0.0));
+        assert_eq!(crate::f32::indexify_lat_long(0.0, 0.0), (90.0, 180.0));
+        assert_eq!(crate::f32::indexify_lat_long(90.0, 180.0), (180.0, 360.0));
     }
 
     #[test]
