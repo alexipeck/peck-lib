@@ -2,8 +2,8 @@ pub mod tests {
 
     #[test]
     fn test_rhs_f64() {
-        assert_eq!(crate::f64::rhs(57.29577951308232), 0.29577951308232286);
-        assert_eq!(crate::f64::rhs(-57.29577951308232), 0.29577951308232286);
+        assert_eq!(crate::f64::rhs(57.29577951308232), 0.29577951308232);
+        assert_eq!(crate::f64::rhs(-57.29577951308232), 0.29577951308232);
     }
 
     #[test]
@@ -164,6 +164,14 @@ pub mod tests {
 
     #[test]
     fn test_() {
-
+        let input: f64 = -57.29577951308232;
+        let input_abs = input.abs();
+        let input_abs_lhs: f64 = input_abs as usize as f64;
+        let output = input_abs - input_abs as usize as f64;
+        println!("input: {}", input);
+        println!("input_abs: {}", input_abs);
+        println!("input_lhs_abs: {}", input_abs_lhs);
+        println!("output: {}", output);
+        println!("{} - {} = {}", input_abs, input_abs_lhs, output);
     }
 }
