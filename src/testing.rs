@@ -173,5 +173,11 @@ pub mod tests {
         println!("input_lhs_abs: {}", input_abs_lhs);
         println!("output: {}", output);
         println!("{} - {} = {}", input_abs, input_abs_lhs, output);
+
+        let input = -57.29577951308232;
+        let input_string = input.to_string();
+        let (_, rhs_str) = input_string.split_once('.').unwrap();
+        let rhs_f64: f64 = format!("0.{}", rhs_str).parse::<f64>().unwrap();
+        println!("{}", rhs_f64);
     }
 }
