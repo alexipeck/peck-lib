@@ -36,17 +36,28 @@ pub mod f64 {
     ///right hand side of the decimal point
     #[inline]
     pub fn rhs(input: f64) -> f64 {
-        let input_abs = input.abs();
+        let input_abs: f64 = input.abs();
         input_abs - input_abs as usize as f64
     }
-    
+
+    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent
+    #[inline]
+    pub fn rhs_exact(input: f64) -> f64 {
+        let input_string: String = input.to_string();
+        if let Some((_, rhs_str)) = input_string.split_once('.') {
+            format!("0.{}", rhs_str).parse::<f64>().unwrap()
+        } else {
+            0.0
+        }
+    }
+
     ///left hand side of the decimal point
     #[inline]
     pub fn lhs(input: f64) -> f64 {
         input as isize as f64
     }
 
-    ///left hand side of the decimal point absolute 
+    ///left hand side of the decimal point absolute
     #[inline]
     pub fn lhs_abs(input: f64) -> f64 {
         input.abs() as usize as f64
@@ -69,19 +80,19 @@ pub mod f64 {
     pub fn to_radians(input_degrees: f64) -> f64 {
         input_degrees * DEG_TO_RAD
     }
-    
+
     ///converting an implied radians value to degrees
     #[inline]
     pub fn to_degrees(input_radians: f64) -> f64 {
         input_radians * RAD_TO_DEG
     }
-    
+
     ///normalise a value between the minimum and maximum value it could be
     #[inline]
     pub fn normalise(input: f64, min: f64, max: f64) -> f64 {
         (input - min) / (max - min)
     }
-    
+
     ///get the index using a value normalised to the dimensions of your vector, array, or other storage indexed or sized structures
     #[inline]
     pub fn normalised_to_index(input: f64, max: usize) -> usize {
@@ -93,22 +104,27 @@ pub mod f64 {
     pub fn indexify_lat(lat: f64) -> f64 {
         lat + 90.0
     }
-    
+
     ///shifts the value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_long(long: f64) -> f64 {
         long + 180.0
     }
-    
+
     ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_lat_long(lat: f64, long: f64) -> (f64, f64) {
         (indexify_lat(lat), indexify_long(long))
     }
+
+    pub fn trunc(input: f64, decimal_places: u8) -> f64 {
+        let t: f64 = 10u32.pow(decimal_places as u32) as f64;
+        (input * t).floor() / t
+    }
 }
 
 pub mod f32 {
-    use self::consts::{RAD_TO_DEG, DEG_TO_RAD};
+    use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
     pub mod consts {
         use std::f32::consts::PI;
@@ -126,10 +142,21 @@ pub mod f32 {
     ///right hand side of the decimal point
     #[inline]
     pub fn rhs(input: f32) -> f32 {
-        let input_abs = input.abs();
+        let input_abs: f32 = input.abs();
         input_abs - input_abs as usize as f32
     }
-    
+
+    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent
+    #[inline]
+    pub fn rhs_exact(input: f32) -> f32 {
+        let input_string: String = input.to_string();
+        if let Some((_, rhs_str)) = input_string.split_once('.') {
+            format!("0.{}", rhs_str).parse::<f32>().unwrap()
+        } else {
+            0.0
+        }
+    }
+
     ///left hand side of the decimal point
     #[inline]
     pub fn lhs(input: f32) -> f32 {
@@ -159,19 +186,19 @@ pub mod f32 {
     pub fn to_radians(input_degrees: f32) -> f32 {
         input_degrees * DEG_TO_RAD
     }
-    
+
     ///converting an implied radians value to degrees
     #[inline]
     pub fn to_degrees(input_radians: f32) -> f32 {
         input_radians * RAD_TO_DEG
     }
-    
+
     ///normalise a value between the minimum and maximum value it could be
     #[inline]
     pub fn normalise(input: f32, min: f32, max: f32) -> f32 {
         (input - min) / (max - min)
     }
-    
+
     ///get the index using a value normalised to the dimensions of your vector, array, or other storage indexed or sized structures
     #[inline]
     pub fn normalised_to_index(input: f32, max: usize) -> usize {
@@ -183,13 +210,13 @@ pub mod f32 {
     pub fn indexify_lat(lat: f32) -> f32 {
         lat + 90.0
     }
-    
+
     ///shifts the value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_long(long: f32) -> f32 {
         long + 180.0
     }
-    
+
     ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_lat_long(lat: f32, long: f32) -> (f32, f32) {

@@ -1,15 +1,40 @@
 pub mod tests {
 
+    //https://stackoverflow.com/questions/41447678/comparison-of-two-floats-in-rust-to-arbitrary-level-of-precision
+    #[allow(dead_code)]
+    fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
+        let factor = 10.0f64.powi(decimal_places as i32);
+        let a = (a * factor).trunc();
+        let b = (b * factor).trunc();
+        a == b
+    }
+
+    #[allow(dead_code)]
+    fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
+        let factor = 10.0f32.powi(decimal_places as i32);
+        let a = (a * factor).trunc();
+        let b = (b * factor).trunc();
+        a == b
+    }
+
     #[test]
     fn test_rhs_f64() {
-        assert_eq!(crate::f64::rhs(57.29577951308232), 0.29577951308232);
-        assert_eq!(crate::f64::rhs(-57.29577951308232), 0.29577951308232);
+        assert!(approx_equal_f64(
+            crate::f64::rhs(57.29577951308232),
+            0.29577951308232,
+            13
+        ));
+        assert!(approx_equal_f64(
+            crate::f64::rhs(-57.29577951308232),
+            0.29577951308232,
+            13
+        ));
     }
 
     #[test]
     fn test_rhs_f32() {
-        assert_eq!(crate::f32::rhs(57.29578), 0.29578018);
-        assert_eq!(crate::f32::rhs(-57.29578), 0.29578018);
+        assert!(approx_equal_f32(crate::f32::rhs(57.29578), 0.29578, 5));
+        assert!(approx_equal_f32(crate::f32::rhs(-57.29578), 0.29578, 5));
     }
 
     #[test]
@@ -17,7 +42,7 @@ pub mod tests {
         assert_eq!(crate::f64::lhs(57.29577951308232), 57.0);
         assert_eq!(crate::f64::lhs(-57.29577951308232), -57.0);
     }
-    
+
     #[test]
     fn test_lhs_f32() {
         assert_eq!(crate::f32::lhs(57.29578), 57.0);
@@ -38,31 +63,63 @@ pub mod tests {
 
     #[test]
     fn test_split_f64() {
-        assert_eq!(crate::f64::split(57.29577951308232), (57.0, 0.29577951308232286));
-        assert_eq!(crate::f64::split(-57.29577951308232), (-57.0, 0.29577951308232286));
+        {
+            let (lhs, rhs) = crate::f64::split(57.29577951308232);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
+        }
+        {
+            let (lhs, rhs) = crate::f64::split(-57.29577951308232);
+            assert_eq!(lhs, -57.0);
+            assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
+        }
     }
 
     #[test]
     fn test_split_f32() {
-        assert_eq!(crate::f32::split(57.29578), (57.0, 0.29578018));
-        assert_eq!(crate::f32::split(-57.29578), (-57.0, 0.29578018));
+        {
+            let (lhs, rhs) = crate::f32::split(57.29578);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f32(rhs, 0.29578, 5));
+        }
+        {
+            let (lhs, rhs) = crate::f32::split(-57.29578);
+            assert_eq!(lhs, -57.0);
+            assert!(approx_equal_f32(rhs, 0.29578, 5));
+        }
     }
 
     #[test]
     fn test_split_abs_f64() {
-        assert_eq!(crate::f64::split_abs(57.29577951308232), (57.0, 0.29577951308232286));
-        assert_eq!(crate::f64::split_abs(-57.29577951308232), (57.0, 0.29577951308232286));
+        {
+            let (lhs, rhs) = crate::f64::split_abs(57.29577951308232);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
+        }
+        {
+            let (lhs, rhs) = crate::f64::split_abs(-57.29577951308232);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
+        }
     }
 
     #[test]
     fn test_split_abs_f32() {
-        assert_eq!(crate::f32::split_abs(57.29578), (57.0, 0.29578018));
-        assert_eq!(crate::f32::split_abs(-57.29578), (57.0, 0.29578018));
+        {
+            let (lhs, rhs) = crate::f32::split_abs(57.29578);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f32(rhs, 0.29578, 5));
+        }
+        {
+            let (lhs, rhs) = crate::f32::split_abs(-57.29578);
+            assert_eq!(lhs, 57.0);
+            assert!(approx_equal_f32(rhs, 0.29578, 5));
+        }
     }
 
     #[test]
     fn test_to_radians_f64() {
-        let input: f64 = 100.0;//100.0000000003249
+        let input: f64 = 100.0; //100.0000000003249
         assert_eq!(input.to_radians(), crate::f64::to_radians(input));
         assert_eq!(crate::f64::to_radians(input), 1.7453292519943295);
         assert_eq!(crate::f64::to_radians(-input), -1.7453292519943295);
@@ -70,7 +127,7 @@ pub mod tests {
 
     #[test]
     fn test_to_radians_f32() {
-        let input: f32 = 100.0;//100.0000000003249
+        let input: f32 = 100.0; //100.0000000003249
         assert_eq!(input.to_radians(), crate::f32::to_radians(input));
         assert_eq!(crate::f32::to_radians(input), 1.7453293);
         assert_eq!(crate::f32::to_radians(-input), -1.7453293);
@@ -94,30 +151,124 @@ pub mod tests {
 
     #[test]
     fn test_normalise_f64() {
-        assert_eq!(crate::f64::normalise(crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64 / 2.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64), 0.5);
-        assert_eq!(crate::f64::normalise(crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64), 1.0);
-        assert_eq!(crate::f64::normalise(0.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64), 0.0);
+        assert_eq!(
+            crate::f64::normalise(
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64 / 2.0,
+                0.0,
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64
+            ),
+            0.5
+        );
+        assert_eq!(
+            crate::f64::normalise(
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64,
+                0.0,
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64
+            ),
+            1.0
+        );
+        assert_eq!(
+            crate::f64::normalise(0.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64),
+            0.0
+        );
     }
 
     #[test]
     fn test_normalise_f32() {
-        assert_eq!(crate::f32::normalise(crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32 / 2.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32), 0.5);
-        assert_eq!(crate::f32::normalise(crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32), 1.0);
-        assert_eq!(crate::f32::normalise(0.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32), 0.0);
+        assert_eq!(
+            crate::f32::normalise(
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32 / 2.0,
+                0.0,
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32
+            ),
+            0.5
+        );
+        assert_eq!(
+            crate::f32::normalise(
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32,
+                0.0,
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32
+            ),
+            1.0
+        );
+        assert_eq!(
+            crate::f32::normalise(0.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32),
+            0.0
+        );
     }
 
     #[test]
     fn test_normalised_to_index_f64() {
-        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(-90.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), 0);
-        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(0.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2);
-        assert_eq!(crate::f64::normalised_to_index(crate::f64::normalise(crate::f64::indexify_lat(90.0) * 60.0 * 60.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE);
+        assert_eq!(
+            crate::f64::normalised_to_index(
+                crate::f64::normalise(
+                    crate::f64::indexify_lat(-90.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            0
+        );
+        assert_eq!(
+            crate::f64::normalised_to_index(
+                crate::f64::normalise(
+                    crate::f64::indexify_lat(0.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2
+        );
+        assert_eq!(
+            crate::f64::normalised_to_index(
+                crate::f64::normalise(
+                    crate::f64::indexify_lat(90.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+        );
     }
 
     #[test]
     fn test_normalised_to_index_f32() {
-        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(-90.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), 0);
-        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(0.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2);
-        assert_eq!(crate::f32::normalised_to_index(crate::f32::normalise(crate::f32::indexify_lat(90.0) * 60.0 * 60.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE), crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE);
+        assert_eq!(
+            crate::f32::normalised_to_index(
+                crate::f32::normalise(
+                    crate::f32::indexify_lat(-90.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            0
+        );
+        assert_eq!(
+            crate::f32::normalised_to_index(
+                crate::f32::normalise(
+                    crate::f32::indexify_lat(0.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2
+        );
+        assert_eq!(
+            crate::f32::normalised_to_index(
+                crate::f32::normalise(
+                    crate::f32::indexify_lat(90.0) * 60.0 * 60.0,
+                    0.0,
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                ),
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            ),
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+        );
     }
 
     #[test]
@@ -133,7 +284,7 @@ pub mod tests {
         assert_eq!(crate::f32::indexify_lat(0.0), 90.0);
         assert_eq!(crate::f32::indexify_lat(90.0), 180.0);
     }
-    
+
     #[test]
     fn test_indexify_long_f64() {
         assert_eq!(crate::f64::indexify_long(-180.0), 0.0);
@@ -163,21 +314,5 @@ pub mod tests {
     }
 
     #[test]
-    fn test_() {
-        let input: f64 = -57.29577951308232;
-        let input_abs = input.abs();
-        let input_abs_lhs: f64 = input_abs as usize as f64;
-        let output = input_abs - input_abs as usize as f64;
-        println!("input: {}", input);
-        println!("input_abs: {}", input_abs);
-        println!("input_lhs_abs: {}", input_abs_lhs);
-        println!("output: {}", output);
-        println!("{} - {} = {}", input_abs, input_abs_lhs, output);
-
-        let input = -57.29577951308232;
-        let input_string = input.to_string();
-        let (_, rhs_str) = input_string.split_once('.').unwrap();
-        let rhs_f64: f64 = format!("0.{}", rhs_str).parse::<f64>().unwrap();
-        println!("{}", rhs_f64);
-    }
+    fn test_() {}
 }
