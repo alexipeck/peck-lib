@@ -314,5 +314,12 @@ pub mod tests {
     }
 
     #[test]
-    fn test_() {}
+    fn test_trunc_f64_9dp() {
+        assert_eq!(crate::f64::trunc(57.2957795130823209, 9), 57.295779513);
+    }
+
+    #[test]
+    fn test_() {
+        
+    }
 }

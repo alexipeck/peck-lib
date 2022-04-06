@@ -117,6 +117,7 @@ pub mod f64 {
         (indexify_lat(lat), indexify_long(long))
     }
 
+    //can only truncate to 9 decimal places safely
     pub fn trunc(input: f64, decimal_places: u8) -> f64 {
         let t: f64 = 10u32.pow(decimal_places as u32) as f64;
         (input * t).floor() / t
