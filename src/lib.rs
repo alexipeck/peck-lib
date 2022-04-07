@@ -119,7 +119,7 @@ pub mod f64 {
     pub fn indexify_lat_long(lat: f64, long: f64) -> (f64, f64) {
         (indexify_lat(lat), indexify_long(long))
     }
-
+    
     ///can only truncate to 9 decimal places safely
     #[inline]
     pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {

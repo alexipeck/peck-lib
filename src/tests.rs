@@ -1,21 +1,17 @@
 #[allow(unused_imports)]
 use crate::error::Warning;
 
-//https://stackoverflow.com/questions/41447678/comparison-of-two-floats-in-rust-to-arbitrary-level-of-precision
+//based on: https://stackoverflow.com/questions/41447678/comparison-of-two-floats-in-rust-to-arbitrary-level-of-precision
 #[allow(dead_code)]
 fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
-    let factor = 10.0f64.powi(decimal_places as i32);
-    let a = (a * factor).trunc();
-    let b = (b * factor).trunc();
-    a == b
+    let factor = 10u32.pow(decimal_places as u32) as f64;
+    (a * factor).trunc() == (b * factor).trunc()
 }
 
 #[allow(dead_code)]
 fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
-    let factor = 10.0f32.powi(decimal_places as i32);
-    let a = (a * factor).trunc();
-    let b = (b * factor).trunc();
-    a == b
+    let factor = 10u32.pow(decimal_places as u32) as f32;
+    (a * factor).trunc() == (b * factor).trunc()
 }
 
 #[test]
