@@ -1,4 +1,5 @@
-pub mod testing;
+pub mod error;
+pub mod tests;
 pub mod consts {
     pub const OS_PATH_SEPARATOR: &str = if cfg!(windows) { r"\" } else { "/" };
     pub const NUMS: &str = r"0123456789";
@@ -17,6 +18,8 @@ pub mod usize {
 }
 
 pub mod f64 {
+    use crate::error::{Warning, Message};
+
     use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
     pub mod consts {
@@ -117,10 +120,45 @@ pub mod f64 {
         (indexify_lat(lat), indexify_long(long))
     }
 
-    //can only truncate to 9 decimal places safely
-    pub fn trunc(input: f64, decimal_places: u8) -> f64 {
+    ///can only truncate to 9 decimal places safely
+    #[inline]
+    pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {
         let t: f64 = 10u32.pow(decimal_places as u32) as f64;
-        (input * t).floor() / t
+        let g = (input.abs() * t).floor() / t;
+        if input.is_sign_negative() {
+            -g
+        } else {
+            g
+        }
+    }
+
+    #[inline]
+    pub fn trunc_safe(input: f64, decimal_places: u8) -> Result<f64, Warning> {
+        let mut safe = true;
+        let t: f64 = 10u32.pow({
+            if !(decimal_places > 9) {
+                decimal_places as u32
+            } else {
+                safe = false;
+                9
+            }
+        }) as f64;
+        let g = (input.abs() * t).floor() / t;
+        let g = if input.is_sign_negative() {
+            -g
+        } else {
+            g
+        };
+        match safe {
+            true => {
+                Ok(g)
+            },
+            false => {
+                //not actually an error, but Results require Ok() or Err()
+                Err(Warning::F64(g, Message::Max9DecimalPlaces))
+            },
+        }
+        
     }
 }
 
