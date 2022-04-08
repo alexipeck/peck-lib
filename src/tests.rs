@@ -152,22 +152,22 @@ mod tests {
     fn test_normalise_f64() {
         assert_eq!(
             crate::f64::normalise(
-                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64 / 2.0,
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES / 2.0,
                 0.0,
-                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES
             ),
             0.5
         );
         assert_eq!(
             crate::f64::normalise(
-                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64,
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES,
                 0.0,
-                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64
+                crate::f64::consts::ARC_SECONDS_IN_360_DEGREES
             ),
             1.0
         );
         assert_eq!(
-            crate::f64::normalise(0.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES_F64),
+            crate::f64::normalise(0.0, 0.0, crate::f64::consts::ARC_SECONDS_IN_360_DEGREES),
             0.0
         );
     }
@@ -176,22 +176,22 @@ mod tests {
     fn test_normalise_f32() {
         assert_eq!(
             crate::f32::normalise(
-                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32 / 2.0,
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES / 2.0,
                 0.0,
-                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES
             ),
             0.5
         );
         assert_eq!(
             crate::f32::normalise(
-                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32,
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES,
                 0.0,
-                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32
+                crate::f32::consts::ARC_SECONDS_IN_360_DEGREES
             ),
             1.0
         );
         assert_eq!(
-            crate::f32::normalise(0.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES_F32),
+            crate::f32::normalise(0.0, 0.0, crate::f32::consts::ARC_SECONDS_IN_360_DEGREES),
             0.0
         );
     }
@@ -203,9 +203,9 @@ mod tests {
                 crate::f64::normalise(
                     crate::f64::indexify_lat(-90.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
             0
         );
@@ -214,22 +214,22 @@ mod tests {
                 crate::f64::normalise(
                     crate::f64::indexify_lat(0.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
-            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES / 2
         );
         assert_eq!(
             crate::f64::normalised_to_index(
                 crate::f64::normalise(
                     crate::f64::indexify_lat(90.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES_F64
+                    crate::f64::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
-            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
         );
     }
 
@@ -240,9 +240,9 @@ mod tests {
                 crate::f32::normalise(
                     crate::f32::indexify_lat(-90.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
             0
         );
@@ -251,22 +251,22 @@ mod tests {
                 crate::f32::normalise(
                     crate::f32::indexify_lat(0.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
-            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE / 2
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES / 2
         );
         assert_eq!(
             crate::f32::normalised_to_index(
                 crate::f32::normalise(
                     crate::f32::indexify_lat(90.0) * 60.0 * 60.0,
                     0.0,
-                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES_F32
+                    crate::f32::consts::ARC_SECONDS_IN_180_DEGREES
                 ),
-                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+                crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
             ),
-            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES_USIZE
+            crate::usize::consts::ARC_SECONDS_IN_180_DEGREES
         );
     }
 
@@ -364,7 +364,7 @@ mod tests {
             if let Err(f) = t {
                 if let Warning::F64(output, message) = f {
                     assert_eq!(output, 57.295779513);
-                    println!("Test message: {}", message);
+                    println!("Intentional warning message: \"{}\"", message);
                 } else {
                     panic!();
                 }
@@ -377,6 +377,5 @@ mod tests {
     #[test]
     #[ignore]
     fn test_() {
-        
     }
 }

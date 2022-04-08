@@ -9,11 +9,11 @@ pub mod consts {
 
 pub mod usize {
     pub mod consts {
-        pub const APPROX_CM_IN_SECOND: usize = 3087;
-        pub const ARC_SECONDS_IN_360_DEGREES_USIZE: usize = 1296000;
-        pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999;
-        pub const ARC_SECONDS_IN_180_DEGREES_USIZE: usize = 648000;
-        pub const ARC_SECONDS_IN_180_DEGREES_INDEXED: usize = 647999;
+        pub const APPROX_CM_IN_SECOND: usize = 3087usize;
+        pub const ARC_SECONDS_IN_360_DEGREES: usize = 1296000usize;
+        pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999usize;
+        pub const ARC_SECONDS_IN_180_DEGREES: usize = 648000usize;
+        pub const ARC_SECONDS_IN_180_DEGREES_INDEXED: usize = 647999usize;
     }
 }
 
@@ -25,14 +25,14 @@ pub mod f64 {
     pub mod consts {
         use std::f64::consts::PI;
 
-        pub const LATITUDE_LIMIT: f64 = 90.0; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
-        pub const LONGITUDE_LIMIT: f64 = 180.0; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
-        pub const ARC_SECONDS_IN_360_DEGREES_F64: f64 = 1296000.0;
-        pub const ARC_SECONDS_IN_180_DEGREES_F64: f64 = 648000.0;
-        pub const EARTH_RADIUS_KM: f64 = 6378.137;
-        pub const EARTH_RADIUS_M: f64 = 6378137.0;
-        pub const DEG_TO_RAD: f64 = PI / 180.0;
-        pub const RAD_TO_DEG: f64 = 57.2957795130823209;
+        pub const LATITUDE_LIMIT: f64 = 90.0f64; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
+        pub const LONGITUDE_LIMIT: f64 = 180.0f64; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
+        pub const ARC_SECONDS_IN_360_DEGREES: f64 = 1296000.0f64;
+        pub const ARC_SECONDS_IN_180_DEGREES: f64 = 648000.0f64;
+        pub const EARTH_RADIUS_KM: f64 = 6378.137f64;
+        pub const EARTH_RADIUS_M: f64 = 6378137.0f64;
+        pub const DEG_TO_RAD: f64 = PI / 180.0f64;
+        pub const RAD_TO_DEG: f64 = 57.2957795130823209f64;
         pub const TWO_PI: f64 = PI + PI;
     }
 
@@ -50,7 +50,7 @@ pub mod f64 {
         if let Some((_, rhs_str)) = input_string.split_once('.') {
             format!("0.{}", rhs_str).parse::<f64>().unwrap()
         } else {
-            0.0
+            0.0f64
         }
     }
 
@@ -105,13 +105,13 @@ pub mod f64 {
     ///shifts the value from (-90 to 90) to (0 to 180)
     #[inline]
     pub fn indexify_lat(lat: f64) -> f64 {
-        lat + 90.0
+        lat + 90.0f64
     }
 
     ///shifts the value from (-180 to 180) to (0 to 360)
     #[inline]
     pub fn indexify_long(long: f64) -> f64 {
-        long + 180.0
+        long + 180.0f64
     }
 
     ///shifts lat value from (-90 to 90) to (0 to 180) and long value from (-180 to 180) to (0 to 360)
@@ -123,39 +123,42 @@ pub mod f64 {
     ///can only truncate to 9 decimal places safely
     #[inline]
     pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {
-        let t: f64 = 10u32.pow(decimal_places as u32) as f64;
-        let g = (input.abs() * t).floor() / t;
+        let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
+        let output_abs = (input.abs() * factor).floor() / factor;
         if input.is_sign_negative() {
-            -g
+            -output_abs
         } else {
-            g
+            output_abs
         }
     }
 
     #[inline]
     pub fn trunc_safe(input: f64, decimal_places: u8) -> Result<f64, Warning> {
         let mut safe = true;
-        let t: f64 = 10u32.pow({
+        let factor: f64 = 10usize.pow({
             if !(decimal_places > 9) {
                 decimal_places as u32
             } else {
                 safe = false;
-                9
+                9u32
             }
         }) as f64;
-        let g = (input.abs() * t).floor() / t;
-        let g = if input.is_sign_negative() {
-            -g
+        let output_abs: f64 = (input.abs() * factor).floor() / factor;
+        let output: f64 = if input.is_sign_negative() {
+            -output_abs
         } else {
-            g
+            output_abs
         };
         match safe {
             true => {
-                Ok(g)
+                Ok(output)
             },
             false => {
-                //not actually an error, but Results require Ok() or Err()
-                Err(Warning::F64(g, Message::Max9DecimalPlaces))
+                //not actually an error, but Result requires Ok() or Err()
+                //it passes through an enumerated message which implements display
+                //it currently only warns that it could only truncate to nine decimal places
+                //and returns it as such.
+                Err(Warning::F64(output, Message::Max9DecimalPlaces))
             },
         }
         
@@ -168,14 +171,14 @@ pub mod f32 {
     pub mod consts {
         use std::f32::consts::PI;
 
-        pub const LATITUDE_LIMIT: f32 = 90.0; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
-        pub const LONGITUDE_LIMIT: f32 = 180.0; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
-        pub const ARC_SECONDS_IN_360_DEGREES_F32: f32 = 1296000.0;
-        pub const ARC_SECONDS_IN_180_DEGREES_F32: f32 = 648000.0;
-        pub const EARTH_RADIUS_KM: f32 = 6378.137;
-        pub const EARTH_RADIUS_M: f32 = 6378137.0;
-        pub const DEG_TO_RAD: f32 = PI / 180.0;
-        pub const RAD_TO_DEG: f32 = 57.2957795130823209;
+        pub const LATITUDE_LIMIT: f32 = 90.0f32; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
+        pub const LONGITUDE_LIMIT: f32 = 180.0f32; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
+        pub const ARC_SECONDS_IN_360_DEGREES: f32 = 1296000.0f32;
+        pub const ARC_SECONDS_IN_180_DEGREES: f32 = 648000.0f32;
+        pub const EARTH_RADIUS_KM: f32 = 6378.137f32;
+        pub const EARTH_RADIUS_M: f32 = 6378137.0f32;
+        pub const DEG_TO_RAD: f32 = PI / 180.0f32;
+        pub const RAD_TO_DEG: f32 = 57.2957795130823209f32;
         pub const TWO_PI: f32 = PI + PI;
     }
     ///right hand side of the decimal point
@@ -192,7 +195,7 @@ pub mod f32 {
         if let Some((_, rhs_str)) = input_string.split_once('.') {
             format!("0.{}", rhs_str).parse::<f32>().unwrap()
         } else {
-            0.0
+            0.0f32
         }
     }
 
