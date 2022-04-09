@@ -2,6 +2,10 @@
 #[allow(unused_imports)]
 use crate::error::Warning;
 #[allow(unused_imports)]
+use crate::f64::consts::RAD_TO_DEG as RAD_TO_DEG_F64;
+#[allow(unused_imports)]
+use crate::f32::consts::RAD_TO_DEG as RAD_TO_DEG_F32;
+#[allow(unused_imports)]
 use crate::f64::trunc_exact;
 
 //based on: https://stackoverflow.com/questions/41447678/comparison-of-two-floats-in-rust-to-arbitrary-level-of-precision
@@ -20,12 +24,12 @@ fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
 #[test]
 fn test_rhs_f64() {
     assert!(approx_equal_f64(
-        crate::f64::rhs(57.29577951308232),
+        crate::f64::rhs(RAD_TO_DEG_F64),
         0.29577951308232,
         13
     ));
     assert!(approx_equal_f64(
-        crate::f64::rhs(-57.29577951308232),
+        crate::f64::rhs(-RAD_TO_DEG_F64),
         0.29577951308232,
         13
     ));
@@ -33,43 +37,43 @@ fn test_rhs_f64() {
 
 #[test]
 fn test_rhs_f32() {
-    assert!(approx_equal_f32(crate::f32::rhs(57.29578), 0.29578, 5));
-    assert!(approx_equal_f32(crate::f32::rhs(-57.29578), 0.29578, 5));
+    assert!(approx_equal_f32(crate::f32::rhs(RAD_TO_DEG_F32), 0.29578, 5));
+    assert!(approx_equal_f32(crate::f32::rhs(-RAD_TO_DEG_F32), 0.29578, 5));
 }
 
 #[test]
 fn test_lhs_f64() {
-    assert_eq!(crate::f64::lhs(57.29577951308232), 57.0);
-    assert_eq!(crate::f64::lhs(-57.29577951308232), -57.0);
+    assert_eq!(crate::f64::lhs(RAD_TO_DEG_F64), 57.0);
+    assert_eq!(crate::f64::lhs(-RAD_TO_DEG_F64), -57.0);
 }
 
 #[test]
 fn test_lhs_f32() {
-    assert_eq!(crate::f32::lhs(57.29578), 57.0);
-    assert_eq!(crate::f32::lhs(-57.29578), -57.0);
+    assert_eq!(crate::f32::lhs(RAD_TO_DEG_F32), 57.0);
+    assert_eq!(crate::f32::lhs(-RAD_TO_DEG_F32), -57.0);
 }
 
 #[test]
 fn test_lhs_abs_f64() {
-    assert_eq!(crate::f64::lhs_abs(57.29577951308232), 57.0);
-    assert_eq!(crate::f64::lhs_abs(-57.29577951308232), 57.0);
+    assert_eq!(crate::f64::lhs_abs(RAD_TO_DEG_F64), 57.0);
+    assert_eq!(crate::f64::lhs_abs(-RAD_TO_DEG_F64), 57.0);
 }
 
 #[test]
 fn test_lhs_abs_f32() {
-    assert_eq!(crate::f32::lhs_abs(57.29578), 57.0);
-    assert_eq!(crate::f32::lhs_abs(-57.29578), 57.0);
+    assert_eq!(crate::f32::lhs_abs(RAD_TO_DEG_F32), 57.0);
+    assert_eq!(crate::f32::lhs_abs(-RAD_TO_DEG_F32), 57.0);
 }
 
 #[test]
 fn test_split_f64() {
     {
-        let (lhs, rhs) = crate::f64::split(57.29577951308232);
+        let (lhs, rhs) = crate::f64::split(RAD_TO_DEG_F64);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
     }
     {
-        let (lhs, rhs) = crate::f64::split(-57.29577951308232);
+        let (lhs, rhs) = crate::f64::split(-RAD_TO_DEG_F64);
         assert_eq!(lhs, -57.0);
         assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
     }
@@ -78,12 +82,12 @@ fn test_split_f64() {
 #[test]
 fn test_split_f32() {
     {
-        let (lhs, rhs) = crate::f32::split(57.29578);
+        let (lhs, rhs) = crate::f32::split(RAD_TO_DEG_F32);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f32(rhs, 0.29578, 5));
     }
     {
-        let (lhs, rhs) = crate::f32::split(-57.29578);
+        let (lhs, rhs) = crate::f32::split(-RAD_TO_DEG_F32);
         assert_eq!(lhs, -57.0);
         assert!(approx_equal_f32(rhs, 0.29578, 5));
     }
@@ -92,12 +96,12 @@ fn test_split_f32() {
 #[test]
 fn test_split_abs_f64() {
     {
-        let (lhs, rhs) = crate::f64::split_abs(57.29577951308232);
+        let (lhs, rhs) = crate::f64::split_abs(RAD_TO_DEG_F64);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
     }
     {
-        let (lhs, rhs) = crate::f64::split_abs(-57.29577951308232);
+        let (lhs, rhs) = crate::f64::split_abs(-RAD_TO_DEG_F64);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f64(rhs, 0.29577951308232, 13));
     }
@@ -106,12 +110,12 @@ fn test_split_abs_f64() {
 #[test]
 fn test_split_abs_f32() {
     {
-        let (lhs, rhs) = crate::f32::split_abs(57.29578);
+        let (lhs, rhs) = crate::f32::split_abs(RAD_TO_DEG_F32);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f32(rhs, 0.29578, 5));
     }
     {
-        let (lhs, rhs) = crate::f32::split_abs(-57.29578);
+        let (lhs, rhs) = crate::f32::split_abs(-RAD_TO_DEG_F32);
         assert_eq!(lhs, 57.0);
         assert!(approx_equal_f32(rhs, 0.29578, 5));
     }
@@ -315,62 +319,62 @@ fn test_indexify_lat_long_f32() {
 
 #[test]
 fn test_trunc_unsafe_f64() {
-    assert_eq!(crate::f64::trunc_unsafe(57.29577951308232, 19), 57.29577951308232);
-    assert_eq!(crate::f64::trunc_unsafe(-57.29577951308232, 19), -57.29577951308232);
-    assert_eq!(crate::f64::trunc_unsafe(57.29577951308232, 0), 57.0);
-    assert_eq!(crate::f64::trunc_unsafe(-57.29577951308232, 0), -57.0);
+    assert_eq!(crate::f64::trunc_unsafe(RAD_TO_DEG_F64, 19), RAD_TO_DEG_F64);
+    assert_eq!(crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 19), -RAD_TO_DEG_F64);
+    assert_eq!(crate::f64::trunc_unsafe(RAD_TO_DEG_F64, 0), 57.0);
+    assert_eq!(crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 0), -57.0);
 }
 
 #[test]
 #[should_panic]
 fn test_trunc_unsafe_should_error_f64() {
-    crate::f64::trunc_unsafe(57.29577951308232, 20);
-    crate::f64::trunc_unsafe(-57.29577951308232, 20);
+    crate::f64::trunc_unsafe(RAD_TO_DEG_F64, 20);
+    crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 20);
 }
 
 #[test]
 fn test_truct_safe_f64() {
     {
-        let t = crate::f64::trunc_safe(57.29577951308232, 19);
-        assert!(t.is_ok());
-        if let Ok(f) = t {
-            assert_eq!(f, 57.29577951308232);
+        let output: Result<f64, Warning> = crate::f64::trunc_safe(RAD_TO_DEG_F64, 19);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, RAD_TO_DEG_F64);
         } else {
             panic!();
         }
     }
     {
-        let t = crate::f64::trunc_safe(-57.29577951308232, 19);
-        assert!(t.is_ok());
-        if let Ok(f) = t {
-            assert_eq!(f, -57.29577951308232);
+        let output: Result<f64, Warning> = crate::f64::trunc_safe(-RAD_TO_DEG_F64, 19);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, -RAD_TO_DEG_F64);
         } else {
             panic!();
         }
     }
     {
-        let t = crate::f64::trunc_safe(57.29577951308232, 6);
-        assert!(t.is_ok());
-        if let Ok(f) = t {
-            assert_eq!(f, 57.295779);
+        let output: Result<f64, Warning> = crate::f64::trunc_safe(RAD_TO_DEG_F64, 6);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, 57.295779);
         } else {
             panic!();
         }
     }
     {
-        let t = crate::f64::trunc_safe(-57.29577951308232, 6);
-        assert!(t.is_ok());
-        if let Ok(f) = t {
-            assert_eq!(f, -57.295779);
+        let output: Result<f64, Warning> = crate::f64::trunc_safe(-RAD_TO_DEG_F64, 6);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, -57.295779);
         } else {
             panic!();
         }
     }
     {
-        let t = crate::f64::trunc_safe(57.29577951308232, 20);
-        assert!(t.is_err());
-        if let Err(Warning::F64(output, message)) = t {
-            assert_eq!(output, 57.29577951308232);
+        let output: Result<f64, Warning> = crate::f64::trunc_safe(RAD_TO_DEG_F64, 20);
+        assert!(output.is_err());
+        if let Err(Warning::F64(output, message)) = output {
+            assert_eq!(output, RAD_TO_DEG_F64);
             println!("Intentional warning message: \"{}\"", message);
         } else {
             panic!();
@@ -381,6 +385,7 @@ fn test_truct_safe_f64() {
 #[test]
 fn test_trunc_exact_f64() {
     assert_eq!(trunc_exact(-0.2957795130823209, 18), -0.2957795130823209);
+    println!("{}", crate::f64::consts::DEG_TO_RAD);
 }
 
 #[test]
