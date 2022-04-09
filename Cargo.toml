@@ -7,7 +7,7 @@ license = "MIT"
 repository = "https://github.com/alexipeck/peck-lib/"
 categories = []
 authors = ["Alexi Peck"]
-exclude = ["/target", "tests.rs"]
+exclude = ["/target"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
