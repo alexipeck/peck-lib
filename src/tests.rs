@@ -315,23 +315,23 @@ fn test_indexify_lat_long_f32() {
 
 #[test]
 fn test_trunc_unsafe_f64() {
-    assert_eq!(crate::f64::trunc_unsafe(57.2957795130823209, 19), 57.29577951308232);
-    assert_eq!(crate::f64::trunc_unsafe(-57.2957795130823209, 19), -57.29577951308232);
-    assert_eq!(crate::f64::trunc_unsafe(57.2957795130823209, 0), 57.0);
-    assert_eq!(crate::f64::trunc_unsafe(-57.2957795130823209, 0), -57.0);
+    assert_eq!(crate::f64::trunc_unsafe(57.29577951308232, 19), 57.29577951308232);
+    assert_eq!(crate::f64::trunc_unsafe(-57.29577951308232, 19), -57.29577951308232);
+    assert_eq!(crate::f64::trunc_unsafe(57.29577951308232, 0), 57.0);
+    assert_eq!(crate::f64::trunc_unsafe(-57.29577951308232, 0), -57.0);
 }
 
 #[test]
 #[should_panic]
 fn test_trunc_unsafe_should_error_f64() {
-    crate::f64::trunc_unsafe(57.2957795130823209, 20);
-    crate::f64::trunc_unsafe(-57.2957795130823209, 20);
+    crate::f64::trunc_unsafe(57.29577951308232, 20);
+    crate::f64::trunc_unsafe(-57.29577951308232, 20);
 }
 
 #[test]
 fn test_truct_safe_f64() {
     {
-        let t = crate::f64::trunc_safe(57.2957795130823209, 19);
+        let t = crate::f64::trunc_safe(57.29577951308232, 19);
         assert!(t.is_ok());
         if let Ok(f) = t {
             assert_eq!(f, 57.29577951308232);
@@ -340,7 +340,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let t = crate::f64::trunc_safe(-57.2957795130823209, 19);
+        let t = crate::f64::trunc_safe(-57.29577951308232, 19);
         assert!(t.is_ok());
         if let Ok(f) = t {
             assert_eq!(f, -57.29577951308232);
@@ -349,7 +349,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let t = crate::f64::trunc_safe(57.2957795130823209, 6);
+        let t = crate::f64::trunc_safe(57.29577951308232, 6);
         assert!(t.is_ok());
         if let Ok(f) = t {
             assert_eq!(f, 57.295779);
@@ -358,7 +358,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let t = crate::f64::trunc_safe(-57.2957795130823209, 6);
+        let t = crate::f64::trunc_safe(-57.29577951308232, 6);
         assert!(t.is_ok());
         if let Ok(f) = t {
             assert_eq!(f, -57.295779);
@@ -367,7 +367,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let t = crate::f64::trunc_safe(57.2957795130823209, 20);
+        let t = crate::f64::trunc_safe(57.29577951308232, 20);
         assert!(t.is_err());
         if let Err(Warning::F64(output, message)) = t {
             assert_eq!(output, 57.29577951308232);

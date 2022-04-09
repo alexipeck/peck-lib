@@ -32,7 +32,7 @@ pub mod f64 {
         pub const EARTH_RADIUS_KM: f64 = 6378.137f64;
         pub const EARTH_RADIUS_M: f64 = 6378137.0f64;
         pub const DEG_TO_RAD: f64 = PI / 180.0f64;
-        pub const RAD_TO_DEG: f64 = 57.2957795130823209f64;
+        pub const RAD_TO_DEG: f64 = 57.29577951308232f64;
         pub const TWO_PI: f64 = PI + PI;
     }
 
@@ -191,7 +191,7 @@ pub mod f32 {
         pub const EARTH_RADIUS_KM: f32 = 6378.137f32;
         pub const EARTH_RADIUS_M: f32 = 6378137.0f32;
         pub const DEG_TO_RAD: f32 = PI / 180.0f32;
-        pub const RAD_TO_DEG: f32 = 57.2957795130823209f32;
+        pub const RAD_TO_DEG: f32 = 57.29578f32;
         pub const TWO_PI: f32 = PI + PI;
     }
     ///right hand side of the decimal point
