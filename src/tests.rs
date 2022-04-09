@@ -2,9 +2,9 @@
 #[allow(unused_imports)]
 use crate::error::Warning;
 #[allow(unused_imports)]
-use crate::f64::consts::RAD_TO_DEG as RAD_TO_DEG_F64;
-#[allow(unused_imports)]
 use crate::f32::consts::RAD_TO_DEG as RAD_TO_DEG_F32;
+#[allow(unused_imports)]
+use crate::f64::consts::RAD_TO_DEG as RAD_TO_DEG_F64;
 #[allow(unused_imports)]
 use crate::f64::trunc_exact;
 
@@ -37,8 +37,16 @@ fn test_rhs_f64() {
 
 #[test]
 fn test_rhs_f32() {
-    assert!(approx_equal_f32(crate::f32::rhs(RAD_TO_DEG_F32), 0.29578, 5));
-    assert!(approx_equal_f32(crate::f32::rhs(-RAD_TO_DEG_F32), 0.29578, 5));
+    assert!(approx_equal_f32(
+        crate::f32::rhs(RAD_TO_DEG_F32),
+        0.29578,
+        5
+    ));
+    assert!(approx_equal_f32(
+        crate::f32::rhs(-RAD_TO_DEG_F32),
+        0.29578,
+        5
+    ));
 }
 
 #[test]
@@ -320,7 +328,10 @@ fn test_indexify_lat_long_f32() {
 #[test]
 fn test_trunc_unsafe_f64() {
     assert_eq!(crate::f64::trunc_unsafe(RAD_TO_DEG_F64, 19), RAD_TO_DEG_F64);
-    assert_eq!(crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 19), -RAD_TO_DEG_F64);
+    assert_eq!(
+        crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 19),
+        -RAD_TO_DEG_F64
+    );
     assert_eq!(crate::f64::trunc_unsafe(RAD_TO_DEG_F64, 0), 57.0);
     assert_eq!(crate::f64::trunc_unsafe(-RAD_TO_DEG_F64, 0), -57.0);
 }
@@ -390,5 +401,4 @@ fn test_trunc_exact_f64() {
 
 #[test]
 #[ignore]
-fn test_() {
-}
+fn test_() {}

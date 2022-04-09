@@ -18,22 +18,20 @@ pub mod usize {
 }
 
 pub mod f64 {
-    use crate::error::{Warning, Message};
+    use crate::error::{Message, Warning};
 
     use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
     pub mod consts {
-        use std::f64::consts::PI;
-
         pub const LATITUDE_LIMIT: f64 = 90.0f64; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
         pub const LONGITUDE_LIMIT: f64 = 180.0f64; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
         pub const ARC_SECONDS_IN_360_DEGREES: f64 = 1296000.0f64;
         pub const ARC_SECONDS_IN_180_DEGREES: f64 = 648000.0f64;
         pub const EARTH_RADIUS_KM: f64 = 6378.137f64;
         pub const EARTH_RADIUS_M: f64 = 6378137.0f64;
-        pub const DEG_TO_RAD: f64 = PI / 180.0f64;
+        pub const DEG_TO_RAD: f64 = std::f64::consts::PI / 180.0f64;
         pub const RAD_TO_DEG: f64 = 57.29577951308232f64;
-        pub const TWO_PI: f64 = PI + PI;
+        pub const TWO_PI: f64 = std::f64::consts::PI + std::f64::consts::PI;
     }
 
     ///right hand side of the decimal point
@@ -119,7 +117,7 @@ pub mod f64 {
     pub fn indexify_lat_long(lat: f64, long: f64) -> (f64, f64) {
         (indexify_lat(lat), indexify_long(long))
     }
-    
+
     ///can only truncate to 19 decimal places safely
     #[inline]
     pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {
@@ -151,16 +149,14 @@ pub mod f64 {
             output_abs
         };
         match safe {
-            true => {
-                Ok(output)
-            },
+            true => Ok(output),
             false => {
                 //not actually an error, but Result requires Ok() or Err()
                 //it passes through an enumerated message which implements display
                 //it currently only warns that it could only truncate to 19 decimal places
                 //and returns it as such.
                 Err(Warning::F64(output, Message::Max19DecimalPlaces))
-            },
+            }
         }
     }
 
@@ -170,8 +166,14 @@ pub mod f64 {
     pub fn trunc_exact(input: f64, decimal_places: u8) -> f64 {
         let input_string: String = input.to_string();
         if let Some((lhs_str, rhs_str)) = input_string.split_once('.') {
-            let rhs_string: String = rhs_str.chars().into_iter().take(decimal_places as usize).collect();
-            format!("{}.{}", lhs_str, rhs_string).parse::<f64>().unwrap()
+            let rhs_string: String = rhs_str
+                .chars()
+                .into_iter()
+                .take(decimal_places as usize)
+                .collect();
+            format!("{}.{}", lhs_str, rhs_string)
+                .parse::<f64>()
+                .unwrap()
         } else {
             0.0f64
         }
@@ -194,6 +196,7 @@ pub mod f32 {
         pub const RAD_TO_DEG: f32 = 57.29578f32;
         pub const TWO_PI: f32 = PI + PI;
     }
+
     ///right hand side of the decimal point
     #[inline]
     pub fn rhs(input: f32) -> f32 {

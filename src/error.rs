@@ -12,9 +12,7 @@ impl fmt::Display for Message {
     }
 }
 
-pub enum Error {
-
-}
+pub enum Error {}
 
 pub enum Warning {
     F64(f64, Message),
