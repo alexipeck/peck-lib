@@ -120,7 +120,7 @@ pub mod f64 {
         (indexify_lat(lat), indexify_long(long))
     }
     
-    ///can only truncate to 9 decimal places safely
+    ///can only truncate to 19 decimal places safely
     #[inline]
     pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {
         let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
@@ -133,14 +133,15 @@ pub mod f64 {
     }
 
     #[inline]
+    #[allow(clippy::nonminimal_bool)]
     pub fn trunc_safe(input: f64, decimal_places: u8) -> Result<f64, Warning> {
         let mut safe = true;
         let factor: f64 = 10usize.pow({
-            if !(decimal_places > 9) {
+            if !(decimal_places > 19u8) {
                 decimal_places as u32
             } else {
                 safe = false;
-                9u32
+                19u32
             }
         }) as f64;
         let output_abs: f64 = (input.abs() * factor).floor() / factor;
@@ -156,12 +157,24 @@ pub mod f64 {
             false => {
                 //not actually an error, but Result requires Ok() or Err()
                 //it passes through an enumerated message which implements display
-                //it currently only warns that it could only truncate to nine decimal places
+                //it currently only warns that it could only truncate to 19 decimal places
                 //and returns it as such.
-                Err(Warning::F64(output, Message::Max9DecimalPlaces))
+                Err(Warning::F64(output, Message::Max19DecimalPlaces))
             },
         }
-        
+    }
+
+    ///a normalised f64 have a maximum of 16 values after the decimal place
+    ///no rounding
+    #[inline]
+    pub fn trunc_exact(input: f64, decimal_places: u8) -> f64 {
+        let input_string: String = input.to_string();
+        if let Some((lhs_str, rhs_str)) = input_string.split_once('.') {
+            let rhs_string: String = rhs_str.chars().into_iter().take(decimal_places as usize).collect();
+            format!("{}.{}", lhs_str, rhs_string).parse::<f64>().unwrap()
+        } else {
+            0.0f64
+        }
     }
 }
 
