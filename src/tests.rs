@@ -2,24 +2,13 @@
 #[allow(unused_imports)]
 use crate::error::Warning;
 #[allow(unused_imports)]
+use crate::f32::approx_equal_f32;
+#[allow(unused_imports)]
 use crate::f32::consts::RAD_TO_DEG as RAD_TO_DEG_F32;
 #[allow(unused_imports)]
-use crate::f64::consts::RAD_TO_DEG as RAD_TO_DEG_F64;
+use crate::f64::approx_equal_f64;
 #[allow(unused_imports)]
-use crate::f64::trunc_exact;
-
-//based on: https://stackoverflow.com/questions/41447678/comparison-of-two-floats-in-rust-to-arbitrary-level-of-precision
-#[allow(dead_code)]
-fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
-    let factor = 10usize.pow(decimal_places as u32) as f64;
-    (a * factor).trunc() == (b * factor).trunc()
-}
-
-#[allow(dead_code)]
-fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
-    let factor = 10usize.pow(decimal_places as u32) as f32;
-    (a * factor).trunc() == (b * factor).trunc()
-}
+use crate::f64::consts::RAD_TO_DEG as RAD_TO_DEG_F64;
 
 #[test]
 fn test_rhs_f64() {
@@ -140,7 +129,7 @@ fn test_to_radians_f64() {
 #[test]
 fn test_to_radians_f32() {
     let input: f32 = 100.0; //100.0000000003249
-    assert_eq!(input.to_radians(), crate::f32::to_radians(input));
+    assert_eq!(crate::f32::to_radians(input), input.to_radians());
     assert_eq!(crate::f32::to_radians(input), 1.7453293);
     assert_eq!(crate::f32::to_radians(-input), -1.7453293);
 }
@@ -395,8 +384,68 @@ fn test_truct_safe_f64() {
 
 #[test]
 fn test_trunc_exact_f64() {
-    assert_eq!(trunc_exact(-0.2957795130823209, 18), -0.2957795130823209);
-    println!("{}", crate::f64::consts::DEG_TO_RAD);
+    assert_eq!(
+        crate::f64::trunc_exact(-0.2957795130823209, 18),
+        -0.2957795130823209
+    );
+    assert_eq!(
+        crate::f64::trunc_exact(-0.2957795130823209, 16),
+        -0.2957795130823209
+    );
+    assert_eq!(
+        crate::f64::trunc_exact(-0.2957795130823209, 14),
+        -0.29577951308232
+    );
+}
+
+#[test]
+fn test_two_times_pi_equals_pi_plus_pi() {
+    assert_eq!(
+        std::f64::consts::PI + std::f64::consts::PI,
+        2.0f64 * std::f64::consts::PI
+    );
+}
+
+#[test]
+fn test_rad_to_deg() {
+    assert_eq!(
+        crate::f64::consts::RAD_TO_DEG,
+        180.0f64 / std::f64::consts::PI
+    );
+}
+
+#[test]
+fn test_deg_to_rad() {
+    assert_eq!(
+        crate::f64::consts::DEG_TO_RAD,
+        std::f64::consts::PI / 180.0f64
+    );
+}
+
+#[test]
+fn test_approx_equal_f64() {
+    assert!(approx_equal_f64(
+        -5.29577951308232f64,
+        -5.29577951308233f64,
+        13
+    ));
+    let t = approx_equal_f64(-5.29577951308232f64, -5.29577951308233f64, 14);
+    println!("{}", t);
+    assert!(!t);
+    assert!(!approx_equal_f64(
+        -5.29577951308232f64,
+        -5.29577951308233f64,
+        20
+    ));
+}
+
+#[test]
+fn test_trunc_str() {
+    assert_eq!(crate::str::trunc("0123456789", 0), "");
+    assert_eq!(crate::str::trunc("0123456789", 1), "0");
+    assert_eq!(crate::str::trunc("0123456789", 5), "01234");
+    assert_eq!(crate::str::trunc("0123456789", 10), "0123456789");
+    assert_eq!(crate::str::trunc("0123456789", 11), "0123456789");
 }
 
 #[test]

@@ -7,9 +7,23 @@ pub mod consts {
     pub const ABS_FLOAT_CHARSET: &str = r"0.123456789";
 }
 
+pub mod str {
+    ///safely truncate a string to n length
+    #[inline]
+    pub fn trunc(input: &str, length: u8) -> &str {
+        &input[..{
+            if length as usize > input.len() {
+                input.len()
+            } else {
+                length as usize
+            }
+        }]
+    }
+}
+
 pub mod usize {
     pub mod consts {
-        pub const APPROX_CM_IN_SECOND: usize = 3087usize;
+        pub const APPROX_CM_IN_ARC_SECOND: usize = 3087usize;
         pub const ARC_SECONDS_IN_360_DEGREES: usize = 1296000usize;
         pub const ARC_SECONDS_IN_360_DEGREES_INDEXED: usize = 1295999usize;
         pub const ARC_SECONDS_IN_180_DEGREES: usize = 648000usize;
@@ -29,9 +43,8 @@ pub mod f64 {
         pub const ARC_SECONDS_IN_180_DEGREES: f64 = 648000.0f64;
         pub const EARTH_RADIUS_KM: f64 = 6378.137f64;
         pub const EARTH_RADIUS_M: f64 = 6378137.0f64;
-        pub const DEG_TO_RAD: f64 = std::f64::consts::PI / 180.0f64;
+        pub const DEG_TO_RAD: f64 = 0.017453292519943295f64;
         pub const RAD_TO_DEG: f64 = 57.29577951308232f64;
-        pub const TWO_PI: f64 = std::f64::consts::PI + std::f64::consts::PI;
     }
 
     ///right hand side of the decimal point
@@ -56,6 +69,18 @@ pub mod f64 {
     #[inline]
     pub fn lhs(input: f64) -> f64 {
         input as isize as f64
+    }
+
+    ///left hand side of the decimal point
+    #[inline]
+    pub fn lhs_isize(input: f64) -> isize {
+        input as isize
+    }
+
+    ///left hand side of the decimal point
+    #[inline]
+    pub fn lhs_usize(input: f64) -> usize {
+        input as usize
     }
 
     ///left hand side of the decimal point absolute
@@ -175,8 +200,34 @@ pub mod f64 {
                 .parse::<f64>()
                 .unwrap()
         } else {
+            //TODO: Fix this
             0.0f64
         }
+    }
+
+    #[inline]
+    #[allow(clippy::unnecessary_unwrap)]
+    pub fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
+        //lhs short circuit
+        if crate::f64::lhs_isize(a) != crate::f64::lhs_isize(b) {
+            return false;
+        }
+
+        let a_string: String = a.to_string();
+        let b_string: String = b.to_string();
+
+        let a_string_split: Option<(&str, &str)> = a_string.split_once('.');
+        let b_string_split: Option<(&str, &str)> = b_string.split_once('.');
+        if a_string_split.is_some() && b_string_split.is_some() {
+            let (_, a_rhs) = a_string_split.unwrap();
+            let (_, b_rhs) = b_string_split.unwrap();
+            return crate::str::trunc(a_rhs, decimal_places)
+                == crate::str::trunc(b_rhs, decimal_places);
+        } else if a_string_split.is_none() && b_string_split.is_none() {
+            return true;
+        }
+
+        false
     }
 }
 
@@ -184,17 +235,14 @@ pub mod f32 {
     use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
     pub mod consts {
-        use std::f32::consts::PI;
-
         pub const LATITUDE_LIMIT: f32 = 90.0f32; //latitude (-90 to 90), lower = -LATITUDE_LIMIT, upper = LATITUDE_LIMIT
         pub const LONGITUDE_LIMIT: f32 = 180.0f32; //longitude (-180 to 180), lower = -LONGITUDE_LIMIT, upper = LONGITUDE_LIMIT
         pub const ARC_SECONDS_IN_360_DEGREES: f32 = 1296000.0f32;
         pub const ARC_SECONDS_IN_180_DEGREES: f32 = 648000.0f32;
         pub const EARTH_RADIUS_KM: f32 = 6378.137f32;
         pub const EARTH_RADIUS_M: f32 = 6378137.0f32;
-        pub const DEG_TO_RAD: f32 = PI / 180.0f32;
+        pub const DEG_TO_RAD: f32 = 0.017453292f32;
         pub const RAD_TO_DEG: f32 = 57.29578f32;
-        pub const TWO_PI: f32 = PI + PI;
     }
 
     ///right hand side of the decimal point
@@ -219,6 +267,18 @@ pub mod f32 {
     #[inline]
     pub fn lhs(input: f32) -> f32 {
         input as isize as f32
+    }
+
+    ///left hand side of the decimal point
+    #[inline]
+    pub fn lhs_isize(input: f32) -> isize {
+        input as isize
+    }
+
+    ///left hand side of the decimal point
+    #[inline]
+    pub fn lhs_usize(input: f32) -> usize {
+        input as usize
     }
 
     ///left hand side of the decimal point absolute
@@ -279,5 +339,30 @@ pub mod f32 {
     #[inline]
     pub fn indexify_lat_long(lat: f32, long: f32) -> (f32, f32) {
         (indexify_lat(lat), indexify_long(long))
+    }
+
+    #[inline]
+    #[allow(clippy::unnecessary_unwrap)]
+    pub fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
+        //lhs short circuit
+        if crate::f32::lhs_isize(a) != crate::f32::lhs_isize(b) {
+            return false;
+        }
+
+        let a_string: String = a.to_string();
+        let b_string: String = b.to_string();
+
+        let a_string_split: Option<(&str, &str)> = a_string.split_once('.');
+        let b_string_split: Option<(&str, &str)> = b_string.split_once('.');
+        if a_string_split.is_some() && b_string_split.is_some() {
+            let (_, a_rhs) = a_string_split.unwrap();
+            let (_, b_rhs) = b_string_split.unwrap();
+            return crate::str::trunc(a_rhs, decimal_places)
+                == crate::str::trunc(b_rhs, decimal_places);
+        } else if a_string_split.is_none() && b_string_split.is_none() {
+            return true;
+        }
+
+        false
     }
 }
