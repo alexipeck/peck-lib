@@ -1,3 +1,4 @@
+//pub static consts: Vec<f64> = vec![crate::f64::consts::RAD_TO_DEG, 0.0, 10000.0];
 #[test]
 fn test_rhs_f64() {
     assert!(crate::f64::approx_equal_f64(
