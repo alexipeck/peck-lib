@@ -325,7 +325,7 @@ fn test_trunc_unsafe_f64() {
 
 #[test]
 #[should_panic]
-fn test_trunc_unsafe_should_error_f64() {
+fn test_trunc_unsafe_f64_should_error() {
     crate::f64::trunc_unsafe(crate::f64::consts::RAD_TO_DEG, 20);
     crate::f64::trunc_unsafe(-crate::f64::consts::RAD_TO_DEG, 20);
 }
@@ -437,9 +437,38 @@ fn test_approx_equal_f64() {
         -5.29577951308233f64,
         14
     ));
-    assert!(!crate::f64::approx_equal_f64(
+}
+
+#[test]
+#[should_panic]
+fn test_approx_equal_f64_should_error() {
+    let _ = crate::f64::approx_equal_f64(
+        -5.29577951308232f64,
+        -5.29577951308232f64,
+        20
+    );
+}
+
+#[test]
+fn test_approx_equal_infallible_f64() {
+    assert!(crate::f64::approx_equal_infallible_f64(
         -5.29577951308232f64,
         -5.29577951308233f64,
+        13
+    ));
+    assert!(!crate::f64::approx_equal_infallible_f64(
+        -5.29577951308232f64,
+        -5.29577951308233f64,
+        14
+    ));
+    assert!(!crate::f64::approx_equal_infallible_f64(
+        -5.29577951308232f64,
+        -5.29577951308233f64,
+        20
+    ));
+    assert!(crate::f64::approx_equal_infallible_f64(
+        -5.29577951308232f64,
+        -5.29577951308232f64,
         20
     ));
 }
