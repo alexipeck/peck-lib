@@ -2,9 +2,8 @@ pub fn main() {
     {   
         let mut sum: u128 = 0u128;
         let mut total: usize = 0;
-
-        for _ in 0..10 {
-            for i in 0..21 {
+        for i in 0..21 {
+            for _ in 0..10 {
                 let start = std::time::Instant::now();
                 let _output = peck_lib::f64::approx_equal_infallible_f64(
                     -5.29577951308232f64,
@@ -21,9 +20,25 @@ pub fn main() {
     {   
         let mut sum: u128 = 0u128;
         let mut total: usize = 0;
-
         for _ in 0..10 {
-            for i in 0..21 {
+            let start = std::time::Instant::now();
+            let _output = peck_lib::f64::approx_equal_infallible_f64(
+                -5.29577951308232f64,
+                -5.29577951308233f64,
+                20
+            );
+            total += 1;
+            sum += start.elapsed().as_nanos();
+        }
+
+        println!("str: {}ns", sum / total as u128);
+    }
+    {   
+        let mut sum: u128 = 0u128;
+        let mut total: usize = 0;
+
+        for i in 0..21 {
+            for _ in 0..10 {
                 let start = std::time::Instant::now();
                 let _output = peck_lib::f64::approx_equal_infallible_f64(
                     -6.29577951308232f64,
@@ -35,33 +50,14 @@ pub fn main() {
             }
         }
 
-        println!("str_diff_lhs: {}ns", sum / total as u128);
+        println!("str_diff_lhs(short circuits): {}ns", sum / total as u128);
     }
     {   
         let mut sum: u128 = 0u128;
         let mut total: usize = 0;
 
-        for _ in 0..10 {
-            for i in 0..21 {
-                let start = std::time::Instant::now();
-                let _output = peck_lib::f64::approx_equal_f64(
-                    -5.29577951308232f64,
-                    -5.29577951308233f64,
-                    i
-                );
-                total += 1;
-                sum += start.elapsed().as_nanos();
-            }
-        }
-
-        println!("math: {}ns", sum / total as u128);
-    }
-    {   
-        let mut sum: u128 = 0u128;
-        let mut total: usize = 0;
-
-        for _ in 0..10 {
-            for i in 0..21 {
+        for i in 0..21 {
+            for _ in 0..10 {
                 let start = std::time::Instant::now();
                 let _output = peck_lib::f64::approx_equal_f64(
                     -6.29577951308232f64,
@@ -73,13 +69,50 @@ pub fn main() {
             }
         }
 
-        println!("str_diff_lhs: {}ns", sum / total as u128);
+        println!("mathematical way(diff lhs)(diff rhs): {}ns", sum / total as u128);
+    }
+    {   
+        let mut sum: u128 = 0u128;
+        let mut total: usize = 0;
+
+        for i in 0..21 {
+            for _ in 0..10 {
+                let start = std::time::Instant::now();
+                let _output = peck_lib::f64::approx_equal_f64(
+                    -5.29577951308232f64,
+                    -5.29577951308233f64,
+                    i
+                );
+                total += 1;
+                sum += start.elapsed().as_nanos();
+            }
+        }
+
+        println!("mathematical way(same lhs)(diff rhs): {}ns", sum / total as u128);
+    }
+    {   
+        let mut sum: u128 = 0u128;
+        let mut total: usize = 0;
+
+        for i in 0..21 {
+            for _ in 0..10 {
+                let start = std::time::Instant::now();
+                let _output = peck_lib::f64::approx_equal_infallible_f64(
+                    -6.29577951308232f64,
+                    -5.29577951308233f64,
+                    i
+                );
+                total += 1;
+                sum += start.elapsed().as_nanos();
+            }
+        }
+
+        println!("str_diff_lhs(short circuit): {}ns", sum / total as u128);
     }
     {
         let start = std::time::Instant::now();
         for i in 0..21 {
-            println!("{}", i);
-            for _ in 0..1000000 {
+            for _ in 0..100000 {
                 let output = peck_lib::f64::approx_equal_infallible_f64(
                     -5.29577951308232f64,
                     -5.29577951308233f64,
@@ -92,13 +125,12 @@ pub fn main() {
                 }
             }
         }
-        println!("Benchmark ran 20 million times and took {}ms.", start.elapsed().as_millis());
+        println!("str: {}ns.", start.elapsed().as_nanos());
     }
     {
         let start = std::time::Instant::now();
         for i in 0..21 {
-            println!("{}", i);
-            for _ in 0..1000000 {
+            for _ in 0..100000 {
                 let output = peck_lib::f64::approx_equal_f64(
                     -5.29577951308232f64,
                     -5.29577951308233f64,
@@ -111,6 +143,6 @@ pub fn main() {
                 }
             }
         }
-        println!("Benchmark ran 20 million times and took {}ms.", start.elapsed().as_millis());
+        println!("math: {}ns.", start.elapsed().as_nanos());
     }
 }

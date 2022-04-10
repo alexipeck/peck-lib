@@ -145,9 +145,9 @@ pub mod f64 {
 
     ///can only truncate to 19 decimal places safely
     #[inline]
-    pub fn trunc_unsafe(input: f64, decimal_places: u8) -> f64 {
+    pub fn trunc(input: f64, decimal_places: u8) -> f64 {
         let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
-        let output_abs = (input.abs() * factor).floor() / factor;
+        let output_abs: f64 = (input.abs() * factor).floor() / factor;
         if input.is_sign_negative() {
             -output_abs
         } else {
@@ -158,7 +158,7 @@ pub mod f64 {
     #[inline]
     #[allow(clippy::nonminimal_bool)]
     pub fn trunc_safe(input: f64, decimal_places: u8) -> Result<f64, Warning> {
-        let mut safe = true;
+        let mut safe: bool = true;
         let factor: f64 = 10usize.pow({
             if !(decimal_places > 19u8) {
                 decimal_places as u32
@@ -185,7 +185,7 @@ pub mod f64 {
         }
     }
 
-    ///a normalised f64 have a maximum of 16 values after the decimal place
+    ///a normalised (between 0-1) f64 value will have a maximum of 16 values after the decimal place
     ///no rounding
     #[inline]
     pub fn trunc_exact(input: f64, decimal_places: u8) -> f64 {
@@ -200,14 +200,13 @@ pub mod f64 {
                 .parse::<f64>()
                 .unwrap()
         } else {
-            //TODO: Fix this
-            0.0f64
+            lhs(input)
         }
     }
 
     #[inline]
     pub fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
-        let factor = 10usize.pow(decimal_places as u32) as f64;
+        let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
         (a * factor).trunc() == (b * factor).trunc()
     }
 
@@ -249,7 +248,7 @@ pub mod f32 {
         pub const EARTH_RADIUS_KM: f32 = 6378.137f32;
         pub const EARTH_RADIUS_M: f32 = 6378137.0f32;
         pub const DEG_TO_RAD: f32 = 0.017453292f32;
-        pub const RAD_TO_DEG: f32 = 57.29578f32;
+        pub const RAD_TO_DEG: f32 = 57.29578f32;//57.295776
     }
 
     ///right hand side of the decimal point
@@ -348,15 +347,76 @@ pub mod f32 {
         (indexify_lat(lat), indexify_long(long))
     }
 
+    ///can only truncate to 19 decimal places safely
+    #[inline]
+    pub fn trunc(input: f32, decimal_places: u8) -> f32 {
+        let factor: f32 = 10usize.pow(decimal_places as u32) as f32;
+        let output_abs: f32 = (input.abs() * factor).floor() / factor;
+        if input.is_sign_negative() {
+            -output_abs
+        } else {
+            output_abs
+        }
+    }
+
+    #[inline]
+    #[allow(clippy::nonminimal_bool)]
+    pub fn trunc_safe(input: f32, decimal_places: u8) -> Result<f32, crate::error::Warning> {
+        let mut safe: bool = true;
+        let factor: f32 = 10usize.pow({
+            if !(decimal_places > 19u8) {
+                decimal_places as u32
+            } else {
+                safe = false;
+                19u32
+            }
+        }) as f32;
+        let output_abs: f32 = (input.abs() * factor).floor() / factor;
+        let output: f32 = if input.is_sign_negative() {
+            -output_abs
+        } else {
+            output_abs
+        };
+        match safe {
+            true => Ok(output),
+            false => {
+                //not actually an error, but Result requires Ok() or Err()
+                //it passes through an enumerated message which implements display
+                //it currently only warns that it could only truncate to 19 decimal places
+                //and returns it as such.
+                Err(crate::error::Warning::F32(output, crate::error::Message::Max19DecimalPlaces))
+            }
+        }
+    }
+
+    ///a normalised (between 0-1) f64 value will have a maximum of 16 values after the decimal place
+    ///no rounding
+    #[inline]
+    pub fn trunc_exact(input: f32, decimal_places: u8) -> f32 {
+        let input_string: String = input.to_string();
+        if let Some((lhs_str, rhs_str)) = input_string.split_once('.') {
+            let rhs_string: String = rhs_str
+                .chars()
+                .into_iter()
+                .take(decimal_places as usize)
+                .collect();
+            format!("{}.{}", lhs_str, rhs_string)
+                .parse::<f32>()
+                .unwrap()
+        } else {
+            lhs(input)
+        }
+    }
+
     #[inline]
     pub fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
-        let factor = 10usize.pow(decimal_places as u32) as f32;
+        let factor: f32 = 10usize.pow(decimal_places as u32) as f32;
         (a * factor).trunc() == (b * factor).trunc()
     }
 
     #[inline]
     #[allow(clippy::unnecessary_unwrap)]
-    pub fn approx_equal_f32_str(a: f32, b: f32, decimal_places: u8) -> bool {
+    pub fn approx_equal_infallible_f32(a: f32, b: f32, decimal_places: u8) -> bool {
         //lhs short circuit
         if crate::f32::lhs_isize(a) != crate::f32::lhs_isize(b) {
             return false;

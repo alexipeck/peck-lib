@@ -304,30 +304,57 @@ fn test_indexify_lat_long_f32() {
 }
 
 #[test]
-fn test_trunc_unsafe_f64() {
+fn test_trunc_f64() {
     assert_eq!(
-        crate::f64::trunc_unsafe(crate::f64::consts::RAD_TO_DEG, 19),
+        crate::f64::trunc(crate::f64::consts::RAD_TO_DEG, 19),
         crate::f64::consts::RAD_TO_DEG
     );
     assert_eq!(
-        crate::f64::trunc_unsafe(-crate::f64::consts::RAD_TO_DEG, 19),
+        crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 19),
         -crate::f64::consts::RAD_TO_DEG
     );
     assert_eq!(
-        crate::f64::trunc_unsafe(crate::f64::consts::RAD_TO_DEG, 0),
+        crate::f64::trunc(crate::f64::consts::RAD_TO_DEG, 0),
         57.0
     );
     assert_eq!(
-        crate::f64::trunc_unsafe(-crate::f64::consts::RAD_TO_DEG, 0),
+        crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 0),
+        -57.0
+    );
+}
+
+#[test]
+fn test_trunc_f32() {
+    assert_eq!(
+        crate::f32::trunc(crate::f32::consts::RAD_TO_DEG, 19),
+        crate::f32::consts::RAD_TO_DEG
+    );
+    assert_eq!(
+        crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 19),
+        -crate::f32::consts::RAD_TO_DEG
+    );
+    assert_eq!(
+        crate::f32::trunc(crate::f32::consts::RAD_TO_DEG, 0),
+        57.0
+    );
+    assert_eq!(
+        crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 0),
         -57.0
     );
 }
 
 #[test]
 #[should_panic]
-fn test_trunc_unsafe_f64_should_error() {
-    crate::f64::trunc_unsafe(crate::f64::consts::RAD_TO_DEG, 20);
-    crate::f64::trunc_unsafe(-crate::f64::consts::RAD_TO_DEG, 20);
+fn test_trunc_f64_should_error() {
+    crate::f64::trunc(crate::f64::consts::RAD_TO_DEG, 20);
+    crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 20);
+}
+
+#[test]
+#[should_panic]
+fn test_trunc_f32_should_error() {
+    crate::f32::trunc(crate::f32::consts::RAD_TO_DEG, 20);
+    crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 20);
 }
 
 #[test]
@@ -386,6 +413,61 @@ fn test_truct_safe_f64() {
 }
 
 #[test]
+fn test_truct_safe_f32() {
+    {
+        let output: Result<f32, crate::error::Warning> =
+            crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 19);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, crate::f32::consts::RAD_TO_DEG);
+        } else {
+            panic!();
+        }
+    }
+    {
+        let output: Result<f32, crate::error::Warning> =
+            crate::f32::trunc_safe(-crate::f32::consts::RAD_TO_DEG, 19);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, -crate::f32::consts::RAD_TO_DEG);
+        } else {
+            panic!();
+        }
+    }
+    {
+        let output: Result<f32, crate::error::Warning> =
+            crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 4);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, 57.2957);
+        } else {
+            panic!();
+        }
+    }
+    {
+        let output: Result<f32, crate::error::Warning> =
+            crate::f32::trunc_safe(-crate::f32::consts::RAD_TO_DEG, 4);
+        assert!(output.is_ok());
+        if let Ok(output) = output {
+            assert_eq!(output, -57.2957);
+        } else {
+            panic!();
+        }
+    }
+    {
+        let output: Result<f32, crate::error::Warning> =
+            crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 20);
+        assert!(output.is_err());
+        if let Err(crate::error::Warning::F32(output, message)) = output {
+            assert_eq!(output, crate::f32::consts::RAD_TO_DEG);
+            println!("Intentional warning message: \"{}\"", message);
+        } else {
+            panic!();
+        }
+    }
+}
+
+#[test]
 fn test_trunc_exact_f64() {
     assert_eq!(
         crate::f64::trunc_exact(-0.2957795130823209, 18),
@@ -402,7 +484,23 @@ fn test_trunc_exact_f64() {
 }
 
 #[test]
-fn test_two_times_pi_equals_pi_plus_pi() {
+fn test_trunc_exact_f32() {
+    assert_eq!(
+        crate::f32::trunc_exact(-0.29577953, 8),
+        -0.29577953
+    );
+    assert_eq!(
+        crate::f32::trunc_exact(-0.29577953, 6),
+        -0.295779
+    );
+    assert_eq!(
+        crate::f32::trunc_exact(-0.29577953, 4),
+        -0.2957
+    );
+}
+
+#[test]
+fn test_two_times_pi_equals_pi_plus_pi_f64() {
     assert_eq!(
         std::f64::consts::PI + std::f64::consts::PI,
         2.0f64 * std::f64::consts::PI
@@ -410,7 +508,23 @@ fn test_two_times_pi_equals_pi_plus_pi() {
 }
 
 #[test]
-fn test_rad_to_deg() {
+fn test_two_times_pi_equals_pi_plus_pi_f64_to_f32() {
+    assert_eq!(
+        (std::f64::consts::PI + std::f64::consts::PI) as f32,
+        (2.0f64 * std::f64::consts::PI) as f32
+    );
+}
+
+#[test]
+fn test_two_times_pi_equals_pi_plus_pi_f32() {
+    assert_eq!(
+        std::f32::consts::PI + std::f32::consts::PI,
+        2.0f32 * std::f32::consts::PI
+    );
+}
+
+#[test]
+fn test_rad_to_deg_f64() {
     assert_eq!(
         crate::f64::consts::RAD_TO_DEG,
         180.0f64 / std::f64::consts::PI
@@ -418,10 +532,23 @@ fn test_rad_to_deg() {
 }
 
 #[test]
-fn test_deg_to_rad() {
+fn test_rad_to_deg_f32() {
+    assert!(crate::f32::approx_equal_f32(crate::f32::consts::RAD_TO_DEG, 180.0f32 / std::f32::consts::PI, 4));
+}
+
+#[test]
+fn test_deg_to_rad_f64() {
     assert_eq!(
         crate::f64::consts::DEG_TO_RAD,
         std::f64::consts::PI / 180.0f64
+    );
+}
+
+#[test]
+fn test_deg_to_rad_f32() {
+    assert_eq!(
+        crate::f32::consts::DEG_TO_RAD,
+        std::f32::consts::PI / 180.0f32
     );
 }
 
