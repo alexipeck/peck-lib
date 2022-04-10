@@ -206,8 +206,14 @@ pub mod f64 {
     }
 
     #[inline]
-    #[allow(clippy::unnecessary_unwrap)]
     pub fn approx_equal_f64(a: f64, b: f64, decimal_places: u8) -> bool {
+        let factor = 10usize.pow(decimal_places as u32) as f64;
+        (a * factor).trunc() == (b * factor).trunc()
+    }
+
+    #[inline]
+    #[allow(clippy::unnecessary_unwrap)]
+    pub fn approx_equal_f64_str(a: f64, b: f64, decimal_places: u8) -> bool {
         //lhs short circuit
         if crate::f64::lhs_isize(a) != crate::f64::lhs_isize(b) {
             return false;
@@ -342,8 +348,14 @@ pub mod f32 {
     }
 
     #[inline]
-    #[allow(clippy::unnecessary_unwrap)]
     pub fn approx_equal_f32(a: f32, b: f32, decimal_places: u8) -> bool {
+        let factor = 10usize.pow(decimal_places as u32) as f32;
+        (a * factor).trunc() == (b * factor).trunc()
+    }
+
+    #[inline]
+    #[allow(clippy::unnecessary_unwrap)]
+    pub fn approx_equal_f32_str(a: f32, b: f32, decimal_places: u8) -> bool {
         //lhs short circuit
         if crate::f32::lhs_isize(a) != crate::f32::lhs_isize(b) {
             return false;
