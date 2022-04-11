@@ -54,7 +54,7 @@ pub mod f64 {
         input_abs - input_abs as usize as f64
     }
 
-    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent
+    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent which gives the type more precision
     #[inline]
     pub fn rhs_exact(input: f64) -> f64 {
         let input_string: String = input.to_string();
@@ -185,7 +185,7 @@ pub mod f64 {
         }
     }
 
-    ///a normalised (between 0-1) f64 value will have a maximum of 16 values after the decimal place
+    ///a normalised (between 0-1) f64 value will have a maximum of 16 significant digits after the decimal place
     ///no rounding
     #[inline]
     pub fn trunc_exact(input: f64, decimal_places: u8) -> f64 {
@@ -258,7 +258,7 @@ pub mod f32 {
         input_abs - input_abs as usize as f32
     }
 
-    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent
+    ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent which gives the type more precision
     #[inline]
     pub fn rhs_exact(input: f32) -> f32 {
         let input_string: String = input.to_string();

@@ -145,4 +145,24 @@ pub fn main() {
         }
         println!("math: {}ns.", start.elapsed().as_nanos());
     }
+    {
+        let start = std::time::Instant::now();
+        for _ in 0..10000 {
+            for _ in 0..i32::MAX {
+                assert_eq!(peck_lib::f64::lhs(peck_lib::f64::consts::RAD_TO_DEG), 57.0);
+                assert_eq!(peck_lib::f64::lhs(-peck_lib::f64::consts::RAD_TO_DEG), -57.0);
+            }
+        }
+        println!("peck-lhs: {}ns.", start.elapsed().as_nanos());
+    }
+    {
+        let start = std::time::Instant::now();
+        for _ in 0..10000 {
+            for _ in 0..i32::MAX {
+                assert_eq!(peck_lib::f64::consts::RAD_TO_DEG.trunc(), 57.0);
+                assert_eq!(-peck_lib::f64::consts::RAD_TO_DEG.trunc(), -57.0);
+            }
+        }
+        println!("std-lhs: {}ns.", start.elapsed().as_nanos());
+    }
 }
