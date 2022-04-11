@@ -199,34 +199,6 @@ pub fn main() {
     {
         let mut sum: u128 = 0u128;
         let mut total: usize = 0;
-        
-        for _ in 0..10000 {
-            for _ in 0..100 {
-                let start = std::time::Instant::now();
-                let _output: f64 = peck_lib::f64::lhs(peck_lib::f64::consts::RAD_TO_DEG);
-                sum += start.elapsed().as_nanos();
-            }
-            total += 1;
-        }
-        println!("peck-lhs: {}ns.", sum / total as u128);
-    }
-    {
-        let mut sum: u128 = 0u128;
-        let mut total: usize = 0;
-
-        for _ in 0..10000 {
-            for _ in 0..100 {
-                let start = std::time::Instant::now();
-                let _output: f64 = peck_lib::f64::consts::RAD_TO_DEG.trunc();
-                sum += start.elapsed().as_nanos();
-            }
-            total += 1;
-        }
-        println!("std-lhs: {}ns.", sum / total as u128);
-    }
-    {
-        let mut sum: u128 = 0u128;
-        let mut total: usize = 0;
 
         for _ in 0..10000 {
             for _ in 0..100 {

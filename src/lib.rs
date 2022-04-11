@@ -47,13 +47,6 @@ pub mod f64 {
         pub const RAD_TO_DEG: f64 = 57.29577951308232f64;
     }
 
-    ///right hand side of the decimal point
-    #[inline]
-    pub fn rhs(input: f64) -> f64 {
-        let input_abs: f64 = input.abs();
-        input_abs - input_abs as usize as f64
-    }
-
     ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent which gives the type more precision
     #[inline]
     pub fn rhs_exact(input: f64) -> f64 {
@@ -65,40 +58,16 @@ pub mod f64 {
         }
     }
 
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs(input: f64) -> f64 {
-        input as isize as f64
-    }
-
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs_isize(input: f64) -> isize {
-        input as isize
-    }
-
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs_usize(input: f64) -> usize {
-        input as usize
-    }
-
-    ///left hand side of the decimal point absolute
-    #[inline]
-    pub fn lhs_abs(input: f64) -> f64 {
-        input.abs() as usize as f64
-    }
-
     ///split left and right side of the decimal point
     #[inline]
     pub fn split(input: f64) -> (f64, f64) {
-        (lhs(input), rhs(input))
+        (input.trunc(), input.fract())
     }
 
     ///split left and right side of the decimal point absolute
     #[inline]
     pub fn split_abs(input: f64) -> (f64, f64) {
-        (lhs(input.abs()), rhs(input))
+        (input.abs().trunc(), input.abs().fract())
     }
 
     ///converting an implied degree value to radians
@@ -148,11 +117,7 @@ pub mod f64 {
     pub fn trunc(input: f64, decimal_places: u8) -> f64 {
         let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
         let output_abs: f64 = (input.abs() * factor).floor() / factor;
-        if input.is_sign_negative() {
-            -output_abs
-        } else {
-            output_abs
-        }
+        output_abs.copysign(input)
     }
 
     #[inline]
@@ -168,11 +133,7 @@ pub mod f64 {
             }
         }) as f64;
         let output_abs: f64 = (input.abs() * factor).floor() / factor;
-        let output: f64 = if input.is_sign_negative() {
-            -output_abs
-        } else {
-            output_abs
-        };
+        let output: f64 = output_abs.copysign(input);
         match safe {
             true => Ok(output),
             false => {
@@ -200,7 +161,7 @@ pub mod f64 {
                 .parse::<f64>()
                 .unwrap()
         } else {
-            lhs(input)
+            input.trunc()
         }
     }
 
@@ -215,7 +176,7 @@ pub mod f64 {
     ///infallible, but significantly slower, 633ns vs 37ns
     pub fn approx_equal_infallible_f64(a: f64, b: f64, decimal_places: u8) -> bool {
         //lhs short circuit
-        if crate::f64::lhs_isize(a) != crate::f64::lhs_isize(b) {
+        if a as isize != b as isize {
             return false;
         }
 
@@ -251,13 +212,6 @@ pub mod f32 {
         pub const RAD_TO_DEG: f32 = 57.29578f32;//57.295776
     }
 
-    ///right hand side of the decimal point
-    #[inline]
-    pub fn rhs(input: f32) -> f32 {
-        let input_abs: f32 = input.abs();
-        input_abs - input_abs as usize as f32
-    }
-
     ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent which gives the type more precision
     #[inline]
     pub fn rhs_exact(input: f32) -> f32 {
@@ -269,40 +223,16 @@ pub mod f32 {
         }
     }
 
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs(input: f32) -> f32 {
-        input as isize as f32
-    }
-
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs_isize(input: f32) -> isize {
-        input as isize
-    }
-
-    ///left hand side of the decimal point
-    #[inline]
-    pub fn lhs_usize(input: f32) -> usize {
-        input as usize
-    }
-
-    ///left hand side of the decimal point absolute
-    #[inline]
-    pub fn lhs_abs(input: f32) -> f32 {
-        input.abs() as usize as f32
-    }
-
     ///split left and right side of the decimal point
     #[inline]
     pub fn split(input: f32) -> (f32, f32) {
-        (lhs(input), rhs(input))
+        (input.trunc(), input.fract())
     }
 
     ///split left and right side of the decimal point absolute
     #[inline]
     pub fn split_abs(input: f32) -> (f32, f32) {
-        (lhs(input.abs()), rhs(input))
+        (input.abs().trunc(), input.abs().fract())
     }
 
     ///converting an implied degree value to radians
@@ -352,11 +282,7 @@ pub mod f32 {
     pub fn trunc(input: f32, decimal_places: u8) -> f32 {
         let factor: f32 = 10usize.pow(decimal_places as u32) as f32;
         let output_abs: f32 = (input.abs() * factor).floor() / factor;
-        if input.is_sign_negative() {
-            -output_abs
-        } else {
-            output_abs
-        }
+        output_abs.copysign(input)
     }
 
     #[inline]
@@ -372,11 +298,7 @@ pub mod f32 {
             }
         }) as f32;
         let output_abs: f32 = (input.abs() * factor).floor() / factor;
-        let output: f32 = if input.is_sign_negative() {
-            -output_abs
-        } else {
-            output_abs
-        };
+        let output: f32 = output_abs.copysign(input);
         match safe {
             true => Ok(output),
             false => {
@@ -404,7 +326,7 @@ pub mod f32 {
                 .parse::<f32>()
                 .unwrap()
         } else {
-            lhs(input)
+            input.trunc()
         }
     }
 
@@ -418,7 +340,7 @@ pub mod f32 {
     #[allow(clippy::unnecessary_unwrap)]
     pub fn approx_equal_infallible_f32(a: f32, b: f32, decimal_places: u8) -> bool {
         //lhs short circuit
-        if crate::f32::lhs_isize(a) != crate::f32::lhs_isize(b) {
+        if a as isize != b as isize {
             return false;
         }
 
