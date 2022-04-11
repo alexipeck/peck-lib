@@ -1,55 +1,4 @@
-//pub static consts: Vec<f64> = vec![crate::f64::consts::RAD_TO_DEG, 0.0, 10000.0];
-#[test]
-fn test_rhs_f64() {
-    assert!(crate::f64::approx_equal_f64(
-        crate::f64::rhs(crate::f64::consts::RAD_TO_DEG),
-        0.29577951308232,
-        13
-    ));
-    assert!(crate::f64::approx_equal_f64(
-        crate::f64::rhs(-crate::f64::consts::RAD_TO_DEG),
-        0.29577951308232,
-        13
-    ));
-}
-
-#[test]
-fn test_rhs_f32() {
-    assert!(crate::f32::approx_equal_f32(
-        crate::f32::rhs(crate::f32::consts::RAD_TO_DEG),
-        0.29578,
-        5
-    ));
-    assert!(crate::f32::approx_equal_f32(
-        crate::f32::rhs(-crate::f32::consts::RAD_TO_DEG),
-        0.29578,
-        5
-    ));
-}
-
-#[test]
-fn test_lhs_f64() {
-    assert_eq!(crate::f64::lhs(crate::f64::consts::RAD_TO_DEG), 57.0);
-    assert_eq!(crate::f64::lhs(-crate::f64::consts::RAD_TO_DEG), -57.0);
-}
-
-#[test]
-fn test_lhs_f32() {
-    assert_eq!(crate::f32::lhs(crate::f32::consts::RAD_TO_DEG), 57.0);
-    assert_eq!(crate::f32::lhs(-crate::f32::consts::RAD_TO_DEG), -57.0);
-}
-
-#[test]
-fn test_lhs_abs_f64() {
-    assert_eq!(crate::f64::lhs_abs(crate::f64::consts::RAD_TO_DEG), 57.0);
-    assert_eq!(crate::f64::lhs_abs(-crate::f64::consts::RAD_TO_DEG), 57.0);
-}
-
-#[test]
-fn test_lhs_abs_f32() {
-    assert_eq!(crate::f32::lhs_abs(crate::f32::consts::RAD_TO_DEG), 57.0);
-    assert_eq!(crate::f32::lhs_abs(-crate::f32::consts::RAD_TO_DEG), 57.0);
-}
+//pub static consts: Vec<f64> = vec![crate::f64::consts::RAD_TO_DEG, 0.0, 10000.0]
 
 #[test]
 fn test_split_f64() {
@@ -61,7 +10,8 @@ fn test_split_f64() {
     {
         let (lhs, rhs) = crate::f64::split(-crate::f64::consts::RAD_TO_DEG);
         assert_eq!(lhs, -57.0);
-        assert!(crate::f64::approx_equal_f64(rhs, 0.29577951308232, 13));
+        println!("rhs: {}", rhs);
+        assert!(crate::f64::approx_equal_f64(rhs, -0.29577951308232, 13));
     }
 }
 
@@ -75,7 +25,7 @@ fn test_split_f32() {
     {
         let (lhs, rhs) = crate::f32::split(-crate::f32::consts::RAD_TO_DEG);
         assert_eq!(lhs, -57.0);
-        assert!(crate::f32::approx_equal_f32(rhs, 0.29578, 5));
+        assert!(crate::f32::approx_equal_f32(rhs, -0.29578, 5));
     }
 }
 
@@ -89,6 +39,7 @@ fn test_split_abs_f64() {
     {
         let (lhs, rhs) = crate::f64::split_abs(-crate::f64::consts::RAD_TO_DEG);
         assert_eq!(lhs, 57.0);
+        println!("{}", rhs);
         assert!(crate::f64::approx_equal_f64(rhs, 0.29577951308232, 13));
     }
 }
