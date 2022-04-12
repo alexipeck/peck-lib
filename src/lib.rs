@@ -1,13 +1,13 @@
 pub mod error;
 pub mod tests;
-pub mod consts {
-    pub const OS_PATH_SEPARATOR: &str = if cfg!(windows) { r"\" } else { "/" };
-    pub const NUMS_CHARSET: &str = r"0123456789";
-    pub const FLOAT_CHARSET: &str = r"0.-123456789";
-    pub const ABS_FLOAT_CHARSET: &str = r".0123456789";
-}
 
 pub mod str {
+    pub mod consts {
+        pub const OS_PATH_SEPARATOR: &str = if cfg!(windows) { r"\" } else { "/" };
+        pub const NUMS_CHARSET: &str = r"0123456789";
+        pub const FLOAT_CHARSET: &str = r"0.-123456789";
+        pub const ABS_FLOAT_CHARSET: &str = r".0123456789";
+    }
     ///safely truncate a string to n length
     #[inline]
     pub fn trunc(input: &str, length: u8) -> &str {
