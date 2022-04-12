@@ -1,6 +1,6 @@
 [package]
 name = "peck-lib"
-version = "1.0.0"
+version = "1.0.1"
 description = "A set of library and type functions."
 license = "MIT"
 edition = "2021"
