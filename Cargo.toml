@@ -1,9 +1,9 @@
 [package]
 name = "peck-lib"
 version = "1.0.0"
-edition = "2021"
 description = "A set of library and type functions."
 license = "MIT"
+edition = "2021"
 repository = "https://github.com/alexipeck/peck-lib/"
 categories = []
 authors = ["Alexi Peck"]

@@ -2,9 +2,9 @@ pub mod error;
 pub mod tests;
 pub mod consts {
     pub const OS_PATH_SEPARATOR: &str = if cfg!(windows) { r"\" } else { "/" };
-    pub const NUMS: &str = r"0123456789";
+    pub const NUMS_CHARSET: &str = r"0123456789";
     pub const FLOAT_CHARSET: &str = r"0.-123456789";
-    pub const ABS_FLOAT_CHARSET: &str = r"0.123456789";
+    pub const ABS_FLOAT_CHARSET: &str = r".0123456789";
 }
 
 pub mod str {
@@ -113,6 +113,7 @@ pub mod f64 {
     }
 
     ///can only truncate to 19 decimal places safely
+    ///a normalised (between 0-1) f64 value will have a maximum of 8 significant digits after the decimal place
     #[inline]
     pub fn trunc(input: f64, decimal_places: u8) -> f64 {
         let factor: f64 = 10usize.pow(decimal_places as u32) as f64;
@@ -146,8 +147,8 @@ pub mod f64 {
         }
     }
 
-    ///a normalised (between 0-1) f64 value will have a maximum of 16 significant digits after the decimal place
     ///no rounding
+    ///a normalised (between 0-1) f64 value will have a maximum of 16 significant digits after the decimal place
     #[inline]
     pub fn trunc_exact(input: f64, decimal_places: u8) -> f64 {
         let input_string: String = input.to_string();
@@ -209,7 +210,7 @@ pub mod f32 {
         pub const EARTH_RADIUS_KM: f32 = 6378.137f32;
         pub const EARTH_RADIUS_M: f32 = 6378137.0f32;
         pub const DEG_TO_RAD: f32 = 0.017453292f32;
-        pub const RAD_TO_DEG: f32 = 57.29578f32;//57.295776
+        pub const RAD_TO_DEG: f32 = 57.29578f32; //57.295776
     }
 
     ///right hand side of the decimal point exactly as it would display, it won't gain any apparent precision when removing the exponent which gives the type more precision
@@ -277,7 +278,8 @@ pub mod f32 {
         (indexify_lat(lat), indexify_long(long))
     }
 
-    ///can only truncate to 19 decimal places safely
+    ///can only truncate to 8 decimal places safely
+    ///a normalised (between 0-1) f64 value will have a maximum of 8 significant digits after the decimal place
     #[inline]
     pub fn trunc(input: f32, decimal_places: u8) -> f32 {
         let factor: f32 = 10usize.pow(decimal_places as u32) as f32;
@@ -306,7 +308,10 @@ pub mod f32 {
                 //it passes through an enumerated message which implements display
                 //it currently only warns that it could only truncate to 19 decimal places
                 //and returns it as such.
-                Err(crate::error::Warning::F32(output, crate::error::Message::Max19DecimalPlaces))
+                Err(crate::error::Warning::F32(
+                    output,
+                    crate::error::Message::Max19DecimalPlaces,
+                ))
             }
         }
     }

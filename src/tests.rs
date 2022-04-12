@@ -1,5 +1,3 @@
-//pub static consts: Vec<f64> = vec![crate::f64::consts::RAD_TO_DEG, 0.0, 10000.0]
-
 #[test]
 fn test_split_f64() {
     {
@@ -264,14 +262,8 @@ fn test_trunc_f64() {
         crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 19),
         -crate::f64::consts::RAD_TO_DEG
     );
-    assert_eq!(
-        crate::f64::trunc(crate::f64::consts::RAD_TO_DEG, 0),
-        57.0
-    );
-    assert_eq!(
-        crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 0),
-        -57.0
-    );
+    assert_eq!(crate::f64::trunc(crate::f64::consts::RAD_TO_DEG, 0), 57.0);
+    assert_eq!(crate::f64::trunc(-crate::f64::consts::RAD_TO_DEG, 0), -57.0);
 }
 
 #[test]
@@ -284,14 +276,8 @@ fn test_trunc_f32() {
         crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 19),
         -crate::f32::consts::RAD_TO_DEG
     );
-    assert_eq!(
-        crate::f32::trunc(crate::f32::consts::RAD_TO_DEG, 0),
-        57.0
-    );
-    assert_eq!(
-        crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 0),
-        -57.0
-    );
+    assert_eq!(crate::f32::trunc(crate::f32::consts::RAD_TO_DEG, 0), 57.0);
+    assert_eq!(crate::f32::trunc(-crate::f32::consts::RAD_TO_DEG, 0), -57.0);
 }
 
 #[test]
@@ -436,18 +422,9 @@ fn test_trunc_exact_f64() {
 
 #[test]
 fn test_trunc_exact_f32() {
-    assert_eq!(
-        crate::f32::trunc_exact(-0.29577953, 8),
-        -0.29577953
-    );
-    assert_eq!(
-        crate::f32::trunc_exact(-0.29577953, 6),
-        -0.295779
-    );
-    assert_eq!(
-        crate::f32::trunc_exact(-0.29577953, 4),
-        -0.2957
-    );
+    assert_eq!(crate::f32::trunc_exact(-0.29577953, 8), -0.29577953);
+    assert_eq!(crate::f32::trunc_exact(-0.29577953, 6), -0.295779);
+    assert_eq!(crate::f32::trunc_exact(-0.29577953, 4), -0.2957);
 }
 
 #[test]
@@ -484,7 +461,11 @@ fn test_rad_to_deg_f64() {
 
 #[test]
 fn test_rad_to_deg_f32() {
-    assert!(crate::f32::approx_equal_f32(crate::f32::consts::RAD_TO_DEG, 180.0f32 / std::f32::consts::PI, 4));
+    assert!(crate::f32::approx_equal_f32(
+        crate::f32::consts::RAD_TO_DEG,
+        180.0f32 / std::f32::consts::PI,
+        4
+    ));
 }
 
 #[test]
@@ -520,11 +501,7 @@ fn test_approx_equal_f64() {
 #[test]
 #[should_panic]
 fn test_approx_equal_f64_should_error() {
-    let _ = crate::f64::approx_equal_f64(
-        -5.29577951308232f64,
-        -5.29577951308232f64,
-        20
-    );
+    let _ = crate::f64::approx_equal_f64(-5.29577951308232f64, -5.29577951308232f64, 20);
 }
 
 #[test]
