@@ -1,5 +1,7 @@
 use std::fmt;
 
+use thiserror::Error;
+
 pub enum Message {
     Max19DecimalPlaces,
 }
@@ -12,9 +14,10 @@ impl fmt::Display for Message {
     }
 }
 
-pub enum Error {}
-
 pub enum Warning {
     F64(f64, Message),
     F32(f32, Message),
 }
+
+#[derive(Error, Debug)]
+pub enum Error {}

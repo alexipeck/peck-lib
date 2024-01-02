@@ -1,5 +1,7 @@
 pub mod error;
+pub mod logging;
 pub mod tests;
+pub mod r#trait;
 
 pub mod str {
     pub mod consts {
