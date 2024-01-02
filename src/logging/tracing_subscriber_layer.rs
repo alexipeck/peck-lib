@@ -7,24 +7,48 @@ use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
 use super::log::Level;
 
+pub trait MessageFromString {
+    fn new(message: String) -> Self;
+}
+
 #[derive(Debug, Serialize)]
 struct TeamsMessage {
     pub text: String,
 }
 
-pub struct TeamsChannelLayer {
-    sender: Sender<TeamsMessage>,
+impl MessageFromString for TeamsMessage {
+    fn new(message: String) -> Self {
+        TeamsMessage { text: message }
+    }
+}
+
+#[derive(Debug, Serialize)]
+struct DiscordMessage {
+    pub content: String,
+}
+
+impl MessageFromString for DiscordMessage {
+    fn new(message: String) -> Self {
+        DiscordMessage { content: message }
+    }
+}
+
+pub struct TracingLayer {
+    sender: Sender<String>,
     level_filter: Level,
 }
 
-impl TeamsChannelLayer {
-    pub async fn new(uri: String, level_filter: Level) -> Self {
-        let (sender, mut receiver) = mpsc::channel::<TeamsMessage>(128);
+impl TracingLayer {
+    pub async fn new<T>(uri: String, level_filter: Level) -> Self
+    where
+        T: MessageFromString + Serialize + Send + Sync + 'static,
+    {
+        let (sender, mut receiver) = mpsc::channel::<String>(128);
 
-        tokio::spawn(async move {
+        let _ = tokio::spawn(async move {
             let client = Client::new();
             while let Some(message) = receiver.recv().await {
-                match client.post(&uri).json(&message).send().await {
+                match client.post(&uri).json(&T::new(message)).send().await {
                     Ok(response) => {
                         if response.status() != 200 {
                             eprintln!(
@@ -35,27 +59,23 @@ impl TeamsChannelLayer {
                         }
                     }
                     Err(err) => {
-                        eprintln!(
-                            "Error sending message via Teams webhook \'{err}\': {:?}",
-                            message
-                        );
-                        return;
+                        eprintln!("Error sending message via Teams webhook \'{err}\'");
                     }
                 };
             }
         });
-        TeamsChannelLayer {
+        TracingLayer {
             sender,
             level_filter,
         }
     }
 
-    fn send(&self, message: TeamsMessage) {
+    fn send(&self, message: String) {
         let _ = self.sender.try_send(message);
     }
 }
 
-impl<S> Layer<S> for TeamsChannelLayer
+impl<S> Layer<S> for TracingLayer
 where
     S: Subscriber + for<'a> LookupSpan<'a>,
 {
@@ -78,16 +98,13 @@ where
             let mut visitor = StringVisitor(&mut content);
             event.record(&mut visitor);
         }
-        let message = TeamsMessage {
-            text: format!(
-                "{}\t{}\t{}\t{}",
-                Utc::now().to_rfc3339(),
-                level,
-                location,
-                content
-            ),
-        };
-        self.send(message);
+        self.send(format!(
+            "{}\t{}\t{}\t{}",
+            Utc::now().to_rfc3339(),
+            level,
+            location,
+            content
+        ));
     }
 }
 
