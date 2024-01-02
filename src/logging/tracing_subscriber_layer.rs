@@ -12,7 +12,7 @@ pub trait MessageFromString {
 }
 
 #[derive(Debug, Serialize)]
-struct TeamsMessage {
+pub struct TeamsMessage {
     pub text: String,
 }
 
@@ -23,7 +23,7 @@ impl MessageFromString for TeamsMessage {
 }
 
 #[derive(Debug, Serialize)]
-struct DiscordMessage {
+pub struct DiscordMessage {
     pub content: String,
 }
 
