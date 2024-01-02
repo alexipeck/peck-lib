@@ -1,9 +1,15 @@
 use chrono::Utc;
 use reqwest::blocking::Client;
+use serde::Serialize;
 use tracing::{Event, Subscriber};
 use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
 use super::log::Level;
+
+#[derive(Debug, Serialize)]
+struct TeamsMessage {
+    pub text: String,
+}
 
 pub struct TeamsChannelLayer {
     uri: String,
@@ -18,12 +24,12 @@ impl TeamsChannelLayer {
         }
     }
 
-    fn send(&self, message: &str) {
+    fn send(&self, message: TeamsMessage) {
         let response = match self.client.post(&self.uri).json(&message).send() {
             Ok(response) => response,
             Err(err) => {
                 eprintln!(
-                    "Error sending message via Teams webhook \'{err}\': {}",
+                    "Error sending message via Teams webhook \'{err}\': {:?}",
                     message
                 );
                 return;
@@ -56,13 +62,13 @@ where
             let mut visitor = StringVisitor(&mut content);
             event.record(&mut visitor);
         }
-        let message = &format!(
-            "{}\t{}\t{}\t{}",
+        let message = TeamsMessage {
+            text: format!("{}\t{}\t{}\t{}",
             Utc::now().to_rfc3339(),
             Level::from(meta.level()),
             location,
             content
-        );
+        )};
         self.send(message);
     }
 }
