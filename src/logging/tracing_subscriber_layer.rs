@@ -1,6 +1,7 @@
 use chrono::Utc;
-use reqwest::blocking::Client;
+use reqwest::Client;
 use serde::Serialize;
+use tokio::sync::mpsc::{self, Sender};
 use tracing::{Event, Subscriber};
 use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
@@ -12,36 +13,42 @@ struct TeamsMessage {
 }
 
 pub struct TeamsChannelLayer {
-    uri: String,
-    client: Client,
+    sender: Sender<TeamsMessage>,
 }
 
 impl TeamsChannelLayer {
-    pub fn new(uri: String) -> Self {
-        TeamsChannelLayer {
-            uri,
-            client: Client::new(),
-        }
+    pub async fn new(uri: String) -> Self {
+        let (sender, mut receiver) = mpsc::channel::<TeamsMessage>(128);
+
+        tokio::spawn(async move {
+            let client = Client::new();
+            while let Some(message) = receiver.recv().await {
+                match client.post(&uri).json(&message).send().await {
+                    Ok(response) => {
+                        if response.status() != 200 {
+                            eprintln!(
+                                "Teams webhook returned non-200 status code \'{}\': {}",
+                                response.status(),
+                                response.text().await.unwrap_or("".into())
+                            );
+                        }
+                    }
+                    Err(err) => {
+                        eprintln!(
+                            "Error sending message via Teams webhook \'{err}\': {:?}",
+                            message
+                        );
+                        return;
+                    }
+                };
+            }
+        });
+
+        TeamsChannelLayer { sender }
     }
 
     fn send(&self, message: TeamsMessage) {
-        let response = match self.client.post(&self.uri).json(&message).send() {
-            Ok(response) => response,
-            Err(err) => {
-                eprintln!(
-                    "Error sending message via Teams webhook \'{err}\': {:?}",
-                    message
-                );
-                return;
-            }
-        };
-        if response.status() != 200 {
-            eprintln!(
-                "Teams webhook returned non-200 status code \'{}\': {}",
-                response.status(),
-                response.text().unwrap_or("".into())
-            );
-        }
+        let _ = self.sender.try_send(message);
     }
 }
 
@@ -63,12 +70,14 @@ where
             event.record(&mut visitor);
         }
         let message = TeamsMessage {
-            text: format!("{}\t{}\t{}\t{}",
-            Utc::now().to_rfc3339(),
-            Level::from(meta.level()),
-            location,
-            content
-        )};
+            text: format!(
+                "{}\t{}\t{}\t{}",
+                Utc::now().to_rfc3339(),
+                Level::from(meta.level()),
+                location,
+                content
+            ),
+        };
         self.send(message);
     }
 }
