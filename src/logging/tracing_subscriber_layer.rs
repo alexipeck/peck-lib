@@ -6,12 +6,12 @@ use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 use super::log::Level;
 
 pub struct TeamsChannelLayer {
-    uri: &'static str,
+    uri: String,
     client: Client,
 }
 
 impl TeamsChannelLayer {
-    pub fn new(uri: &'static str) -> Self {
+    pub fn new(uri: String) -> Self {
         TeamsChannelLayer {
             uri,
             client: Client::new(),
@@ -19,7 +19,7 @@ impl TeamsChannelLayer {
     }
 
     fn send(&self, message: &str) {
-        let response = match self.client.post(self.uri).json(&message).send() {
+        let response = match self.client.post(&self.uri).json(&message).send() {
             Ok(response) => response,
             Err(err) => {
                 eprintln!(
