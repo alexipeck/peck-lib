@@ -6,7 +6,6 @@ pub mod datetime;
 pub mod error;
 pub mod hashing;
 pub mod logging;
-pub mod serde;
 pub mod tests;
 
 pub enum Message {
