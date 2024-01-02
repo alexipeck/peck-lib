@@ -52,14 +52,14 @@ impl TracingLayer {
                     Ok(response) => {
                         if response.status() != 200 {
                             eprintln!(
-                                "Teams webhook returned non-200 status code \'{}\': {}",
+                                "Webhook returned non-200 status code \'{}\': {}",
                                 response.status(),
                                 response.text().await.unwrap_or("".into())
                             );
                         }
                     }
                     Err(err) => {
-                        eprintln!("Error sending message via Teams webhook \'{err}\'");
+                        eprintln!("Error sending message via webhook \'{err}\'");
                     }
                 };
             }
