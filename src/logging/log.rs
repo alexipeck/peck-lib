@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display};
 use tracing::metadata::Level as TracingLevel;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, Eq, PartialEq, PartialOrd, Ord)]
 pub enum Level {
     Trace = 0,
     Debug = 1,

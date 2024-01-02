@@ -14,10 +14,11 @@ struct TeamsMessage {
 
 pub struct TeamsChannelLayer {
     sender: Sender<TeamsMessage>,
+    level_filter: Level,
 }
 
 impl TeamsChannelLayer {
-    pub async fn new(uri: String) -> Self {
+    pub async fn new(uri: String, level_filter: Level) -> Self {
         let (sender, mut receiver) = mpsc::channel::<TeamsMessage>(128);
 
         tokio::spawn(async move {
@@ -43,8 +44,10 @@ impl TeamsChannelLayer {
                 };
             }
         });
-
-        TeamsChannelLayer { sender }
+        TeamsChannelLayer {
+            sender,
+            level_filter,
+        }
     }
 
     fn send(&self, message: TeamsMessage) {
@@ -58,6 +61,12 @@ where
 {
     fn on_event(&self, event: &Event<'_>, _ctx: Context<'_, S>) {
         let meta = event.metadata();
+
+        let level = Level::from(meta.level());
+        if level < self.level_filter {
+            return;
+        }
+
         let file = meta.file().unwrap_or_default();
         let line = match meta.line() {
             Some(line) => format!(":{}", line),
@@ -73,7 +82,7 @@ where
             text: format!(
                 "{}\t{}\t{}\t{}",
                 Utc::now().to_rfc3339(),
-                Level::from(meta.level()),
+                level,
                 location,
                 content
             ),
