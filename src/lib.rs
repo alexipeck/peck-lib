@@ -1,8 +1,37 @@
+use std::fmt;
+
+use blake3::Hasher;
+
+pub mod datetime;
 pub mod error;
+pub mod hashing;
 pub mod logging;
-pub mod tests;
-pub mod r#trait;
 pub mod serde;
+pub mod tests;
+
+pub enum Message {
+    Max19DecimalPlaces,
+}
+
+impl fmt::Display for Message {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", match self {
+            Self::Max19DecimalPlaces => "Warning: This function can only truncate to a maximum of 19 decimal places, truncating to maximum.",
+        })
+    }
+}
+
+pub enum Warning {
+    F64(f64, Message),
+    F32(f32, Message),
+}
+
+///hashes with blake3
+pub fn hash_string(data: &str) -> String {
+    let mut hasher = Hasher::new();
+    let _ = hasher.update(data.as_bytes());
+    hasher.finalize().to_string()
+}
 
 pub mod str {
     pub mod consts {
@@ -35,7 +64,7 @@ pub mod usize {
 }
 
 pub mod f64 {
-    use crate::error::{Message, Warning};
+    use crate::{Message, Warning};
 
     use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
@@ -203,6 +232,8 @@ pub mod f64 {
 }
 
 pub mod f32 {
+    use crate::{Message, Warning};
+
     use self::consts::{DEG_TO_RAD, RAD_TO_DEG};
 
     pub mod consts {
@@ -292,7 +323,7 @@ pub mod f32 {
 
     #[inline]
     #[allow(clippy::nonminimal_bool)]
-    pub fn trunc_safe(input: f32, decimal_places: u8) -> Result<f32, crate::error::Warning> {
+    pub fn trunc_safe(input: f32, decimal_places: u8) -> Result<f32, Warning> {
         let mut safe: bool = true;
         let factor: f32 = 10usize.pow({
             if !(decimal_places > 19u8) {
@@ -311,10 +342,7 @@ pub mod f32 {
                 //it passes through an enumerated message which implements display
                 //it currently only warns that it could only truncate to 19 decimal places
                 //and returns it as such.
-                Err(crate::error::Warning::F32(
-                    output,
-                    crate::error::Message::Max19DecimalPlaces,
-                ))
+                Err(Warning::F32(output, Message::Max19DecimalPlaces))
             }
         }
     }

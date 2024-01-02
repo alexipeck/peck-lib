@@ -297,7 +297,7 @@ fn test_trunc_f32_should_error() {
 #[test]
 fn test_truct_safe_f64() {
     {
-        let output: Result<f64, crate::error::Warning> =
+        let output: Result<f64, crate::Warning> =
             crate::f64::trunc_safe(crate::f64::consts::RAD_TO_DEG, 19);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -307,7 +307,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let output: Result<f64, crate::error::Warning> =
+        let output: Result<f64, crate::Warning> =
             crate::f64::trunc_safe(-crate::f64::consts::RAD_TO_DEG, 19);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -317,7 +317,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let output: Result<f64, crate::error::Warning> =
+        let output: Result<f64, crate::Warning> =
             crate::f64::trunc_safe(crate::f64::consts::RAD_TO_DEG, 6);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -327,7 +327,7 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let output: Result<f64, crate::error::Warning> =
+        let output: Result<f64, crate::Warning> =
             crate::f64::trunc_safe(-crate::f64::consts::RAD_TO_DEG, 6);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -337,10 +337,10 @@ fn test_truct_safe_f64() {
         }
     }
     {
-        let output: Result<f64, crate::error::Warning> =
+        let output: Result<f64, crate::Warning> =
             crate::f64::trunc_safe(crate::f64::consts::RAD_TO_DEG, 20);
         assert!(output.is_err());
-        if let Err(crate::error::Warning::F64(output, message)) = output {
+        if let Err(crate::Warning::F64(output, message)) = output {
             assert_eq!(output, crate::f64::consts::RAD_TO_DEG);
             println!("Intentional warning message: \"{}\"", message);
         } else {
@@ -352,7 +352,7 @@ fn test_truct_safe_f64() {
 #[test]
 fn test_truct_safe_f32() {
     {
-        let output: Result<f32, crate::error::Warning> =
+        let output: Result<f32, crate::Warning> =
             crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 19);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -362,7 +362,7 @@ fn test_truct_safe_f32() {
         }
     }
     {
-        let output: Result<f32, crate::error::Warning> =
+        let output: Result<f32, crate::Warning> =
             crate::f32::trunc_safe(-crate::f32::consts::RAD_TO_DEG, 19);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -372,7 +372,7 @@ fn test_truct_safe_f32() {
         }
     }
     {
-        let output: Result<f32, crate::error::Warning> =
+        let output: Result<f32, crate::Warning> =
             crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 4);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -382,7 +382,7 @@ fn test_truct_safe_f32() {
         }
     }
     {
-        let output: Result<f32, crate::error::Warning> =
+        let output: Result<f32, crate::Warning> =
             crate::f32::trunc_safe(-crate::f32::consts::RAD_TO_DEG, 4);
         assert!(output.is_ok());
         if let Ok(output) = output {
@@ -392,10 +392,10 @@ fn test_truct_safe_f32() {
         }
     }
     {
-        let output: Result<f32, crate::error::Warning> =
+        let output: Result<f32, crate::Warning> =
             crate::f32::trunc_safe(crate::f32::consts::RAD_TO_DEG, 20);
         assert!(output.is_err());
-        if let Err(crate::error::Warning::F32(output, message)) = output {
+        if let Err(crate::Warning::F32(output, message)) = output {
             assert_eq!(output, crate::f32::consts::RAD_TO_DEG);
             println!("Intentional warning message: \"{}\"", message);
         } else {
