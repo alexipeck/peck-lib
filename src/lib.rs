@@ -3,6 +3,7 @@ use std::fmt;
 use blake3::Hasher;
 
 pub mod datetime;
+pub mod env;
 pub mod error;
 pub mod hashing;
 pub mod logging;
