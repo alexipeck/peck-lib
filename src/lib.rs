@@ -8,6 +8,8 @@ pub mod error;
 pub mod hashing;
 pub mod logging;
 pub mod tests;
+pub mod locking;
+pub mod uid_authority;
 
 pub enum Message {
     Max19DecimalPlaces,
