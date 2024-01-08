@@ -1,8 +1,9 @@
-use std::{sync::Arc, collections::HashSet};
+use std::{collections::HashSet, sync::Arc};
 
 use parking_lot::Mutex;
 use uuid::Uuid;
 
+use crate::error::{Error, UIDAuthorityError};
 
 pub struct UIDAuthority {
     registry: Arc<Mutex<HashSet<Uuid>>>,
@@ -10,9 +11,7 @@ pub struct UIDAuthority {
 
 impl From<Arc<Mutex<HashSet<Uuid>>>> for UIDAuthority {
     fn from(value: Arc<Mutex<HashSet<Uuid>>>) -> Self {
-        Self {
-            registry: value,
-        }
+        Self { registry: value }
     }
 }
 
@@ -27,15 +26,30 @@ impl UIDAuthority {
         }
     }
 
-    /// Adds a value to the set.
-    ///
-    /// Returns whether the value was newly inserted. That is:
-    ///
-    /// - If the set did not previously contain this value, `true` is returned.
-    /// - If the set already contained this value, `false` is returned,
-    ///   and the set is not modified: original value is not replaced,
-    ///   and the value passed as argument is dropped.
-    pub fn insert(&self, uid: Uuid) -> bool {
-        self.registry.lock().insert(uid)
+    pub fn insert(&self, uid: Uuid) -> Result<(), Error> {
+        if !self.registry.lock().insert(uid) {
+            return Err(Error::UIDAuthority(
+                UIDAuthorityError::DuplicateUIDInserted(uid),
+            ));
+        } else {
+            Ok(())
+        }
+    }
+
+    pub fn insert_bulk(&self, uids: Vec<Uuid>) -> Result<(), Error> {
+        let mut duplicates: Vec<Uuid> = Vec::new();
+        let mut lock = self.registry.lock();
+        for uid in uids {
+            if !lock.insert(uid) {
+                duplicates.push(uid);
+            }
+        }
+        if duplicates.is_empty() {
+            Ok(())
+        } else {
+            return Err(Error::UIDAuthority(
+                UIDAuthorityError::DuplicateUIDsInserted(duplicates),
+            ));
+        }
     }
 }

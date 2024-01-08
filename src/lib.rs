@@ -6,9 +6,9 @@ pub mod datetime;
 pub mod env;
 pub mod error;
 pub mod hashing;
+pub mod locking;
 pub mod logging;
 pub mod tests;
-pub mod locking;
 pub mod uid_authority;
 
 pub enum Message {
