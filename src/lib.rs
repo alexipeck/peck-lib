@@ -6,10 +6,11 @@ pub mod datetime;
 pub mod env;
 pub mod error;
 pub mod hashing;
+pub mod http;
 pub mod locking;
 pub mod logging;
 pub mod tests;
-pub mod uid_authority;
+pub mod uid;
 
 pub enum Message {
     Max19DecimalPlaces,

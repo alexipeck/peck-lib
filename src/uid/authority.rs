@@ -3,7 +3,7 @@ use std::{collections::HashSet, sync::Arc};
 use parking_lot::Mutex;
 use uuid::Uuid;
 
-use crate::error::{Error, UIDAuthorityError};
+use super::error::Error;
 
 pub struct UIDAuthority {
     registry: Arc<Mutex<HashSet<Uuid>>>,
@@ -28,9 +28,7 @@ impl UIDAuthority {
 
     pub fn insert(&self, uid: Uuid) -> Result<(), Error> {
         if !self.registry.lock().insert(uid) {
-            return Err(Error::UIDAuthority(
-                UIDAuthorityError::DuplicateUIDInserted(uid),
-            ));
+            return Err(Error::DuplicateUIDInserted(uid));
         } else {
             Ok(())
         }
@@ -47,9 +45,7 @@ impl UIDAuthority {
         if duplicates.is_empty() {
             Ok(())
         } else {
-            return Err(Error::UIDAuthority(
-                UIDAuthorityError::DuplicateUIDsInserted(duplicates),
-            ));
+            return Err(Error::DuplicateUIDsInserted(duplicates));
         }
     }
 }
