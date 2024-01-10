@@ -21,6 +21,7 @@ where
 }
 
 ///x-www-form-urlencoded
+///debug_text_output refers specifically to when deserialization fails
 pub async fn post_x_form_urlencoded_debug<P, T>(
     url: &str,
     client: Client,
