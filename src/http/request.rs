@@ -78,16 +78,11 @@ where
     };
 }
 
-pub async fn get<T>(
-    url: &str,
-    client: Client,
-    bearer_token: Option<&str>,
-    debug_text_output: bool,
-) -> Result<T, Error>
+pub async fn get<T>(url: &str, client: Client, bearer_token: Option<&str>) -> Result<T, Error>
 where
     T: DeserializeOwned,
 {
-    get_debug(url, client, bearer_token, debug_text_output).await
+    get_debug(url, client, bearer_token, false).await
 }
 
 ///debug_text_output refers specifically to when deserialization fails
