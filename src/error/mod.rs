@@ -14,3 +14,15 @@ pub enum Error {
     #[error("SerdeJson({0})")]
     SerdeJson(SerdeJsonError),
 }
+
+impl From<ReqwestError> for Error {
+    fn from(value: ReqwestError) -> Self {
+        Error::Reqwest(value)
+    }
+}
+
+impl From<SerdeJsonError> for Error {
+    fn from(value: SerdeJsonError) -> Self {
+        Error::SerdeJson(value)
+    }
+}
