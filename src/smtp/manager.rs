@@ -40,6 +40,7 @@ impl SmtpManager {
         recipient: String,
         subject: String,
         content: String,
+        content_type: ContentType,
     ) -> Result<Response, Error> {
         let recipient: Mailbox = match recipient.parse() {
             Ok(recipient) => recipient,
@@ -49,7 +50,7 @@ impl SmtpManager {
             .from(self.sender_address.to_owned())
             .to(recipient)
             .subject(subject)
-            .header(ContentType::TEXT_PLAIN)
+            .header(content_type)
             .body(content)
         {
             Ok(message) => message,
