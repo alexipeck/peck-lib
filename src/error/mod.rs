@@ -13,6 +13,8 @@ pub enum Error {
     Reqwest(ReqwestError),
     #[error("SerdeJson({0})")]
     SerdeJson(SerdeJsonError),
+    #[error("Smtp({0})")]
+    Smtp(crate::smtp::error::Error),
 }
 
 impl From<ReqwestError> for Error {

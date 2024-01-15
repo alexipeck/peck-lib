@@ -9,6 +9,7 @@ pub mod hashing;
 pub mod http;
 pub mod locking;
 pub mod logging;
+pub mod smtp;
 pub mod tests;
 pub mod uid;
 
