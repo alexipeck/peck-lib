@@ -1,6 +1,6 @@
 use std::fmt;
-
 use blake3::Hasher;
+pub use lettre::message::header::ContentType;
 
 pub mod datetime;
 pub mod env;
