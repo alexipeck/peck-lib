@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::{Client, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use tracing::{debug, warn};
 
@@ -12,12 +12,21 @@ pub async fn post_json<S, T>(
     client: Client,
     bearer_token: Option<&str>,
     data: &S,
+    expected_response_code: Option<StatusCode>,
 ) -> Result<T, Error>
 where
     S: Serialize + ?Sized,
     T: DeserializeOwned,
 {
-    post_json_debug(url, client, bearer_token, data, false).await
+    post_json_debug(
+        url,
+        client,
+        bearer_token,
+        data,
+        expected_response_code,
+        false,
+    )
+    .await
 }
 
 ///json
@@ -27,12 +36,14 @@ pub async fn post_json_debug<S, T>(
     client: Client,
     bearer_token: Option<&str>,
     data: &S,
+    expected_response_code: Option<StatusCode>,
     debug_text_output: bool,
 ) -> Result<T, Error>
 where
     S: Serialize + ?Sized,
     T: DeserializeOwned,
 {
+    let expected_response_code = expected_response_code.unwrap_or(StatusCode::OK);
     let mut request = client
         .post(url)
         .header("Content-Type", "application/json")
@@ -48,7 +59,7 @@ where
         }
     };
     return match response.status() {
-        reqwest::StatusCode::OK => {
+        status if status == expected_response_code => {
             let response_text: String = match response.text().await {
                 Ok(response_text) => response_text,
                 Err(err) => {
@@ -84,12 +95,21 @@ pub async fn post_x_form_urlencoded<P, T>(
     client: Client,
     bearer_token: Option<&str>,
     params: &P,
+    expected_response_code: Option<StatusCode>,
 ) -> Result<T, Error>
 where
     P: Serialize + ?Sized,
     T: DeserializeOwned,
 {
-    post_x_form_urlencoded_debug(url, client, bearer_token, params, false).await
+    post_x_form_urlencoded_debug(
+        url,
+        client,
+        bearer_token,
+        params,
+        expected_response_code,
+        false,
+    )
+    .await
 }
 
 ///x-www-form-urlencoded
@@ -99,12 +119,14 @@ pub async fn post_x_form_urlencoded_debug<P, T>(
     client: Client,
     bearer_token: Option<&str>,
     params: &P,
+    expected_response_code: Option<StatusCode>,
     debug_text_output: bool,
 ) -> Result<T, Error>
 where
     P: Serialize + ?Sized,
     T: DeserializeOwned,
 {
+    let expected_response_code = expected_response_code.unwrap_or(StatusCode::OK);
     let mut request = client
         .post(url)
         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -120,7 +142,7 @@ where
         }
     };
     return match response.status() {
-        reqwest::StatusCode::OK => {
+        status if status == expected_response_code => {
             let response_text: String = match response.text().await {
                 Ok(response_text) => response_text,
                 Err(err) => {
