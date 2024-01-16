@@ -14,3 +14,15 @@ pub enum Error {
     #[error("InvalidResponse({0}: {1})")]
     InvalidResponse(StatusCode, String),
 }
+
+/* impl From<ReqwestError> for crate::error::Error {
+    fn from(value: ReqwestError) -> Self {
+        crate::error::Error::Reqwest(value)
+    }
+}
+
+impl From<SerdeJsonError> for crate::error::Error {
+    fn from(value: SerdeJsonError) -> Self {
+        crate::error::Error::SerdeJson(value)
+    }
+} */

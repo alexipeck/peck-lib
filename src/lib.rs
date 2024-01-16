@@ -1,15 +1,32 @@
 use blake3::Hasher;
 use std::fmt;
 
+#[cfg(feature = "datetime")]
 pub mod datetime;
+
+#[cfg(feature = "env")]
 pub mod env;
+
 pub mod error;
+
+#[cfg(feature = "hashing")]
 pub mod hashing;
+
+#[cfg(feature = "http")]
 pub mod http;
+
+#[cfg(feature = "locking")]
 pub mod locking;
+
+#[cfg(feature = "logging")]
 pub mod logging;
+
+#[cfg(feature = "smtp")]
 pub mod smtp;
+
 pub mod tests;
+
+#[cfg(feature = "uid")]
 pub mod uid;
 
 pub enum Message {
