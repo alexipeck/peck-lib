@@ -4,7 +4,10 @@ use lettre::{
     Message, SmtpTransport, Transport,
 };
 
-use super::error::{Error, LettreError, SmtpAddressError, SmtpTransportError};
+use super::{
+    attachment::Attachment,
+    error::{Error, LettreError, SmtpAddressError, SmtpTransportError},
+};
 
 pub struct SmtpManager {
     sender_address: Mailbox,
@@ -67,17 +70,22 @@ impl SmtpManager {
         recipient: String,
         subject: String,
         body: String,
+        attachments: Vec<Attachment>,
     ) -> Result<Response, Error> {
         let recipient: Mailbox = match recipient.parse() {
             Ok(recipient) => recipient,
             Err(err) => return Err(Error::RecipientAddressParse(SmtpAddressError(err))),
         };
+        let mut multi_part = MultiPart::mixed().singlepart(SinglePart::html(body));
+        for attachment in attachments {
+            multi_part = multi_part.singlepart(attachment.into());
+        }
         let message = match Message::builder()
             .from(self.sender_address.to_owned())
             .to(recipient)
             .subject(subject)
             .header(ContentType::TEXT_HTML)
-            .multipart(MultiPart::mixed().singlepart(SinglePart::html(body)))
+            .multipart(multi_part)
         {
             Ok(message) => message,
             Err(err) => return Err(Error::MessageBuilder(LettreError(err))),
