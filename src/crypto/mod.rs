@@ -1,3 +1,4 @@
+use blake3::Hasher;
 use rand::Rng;
 use rand_chacha::ChaCha20Rng;
 use rand_core::{OsRng, RngCore, SeedableRng};
