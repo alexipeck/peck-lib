@@ -21,6 +21,7 @@ locking = []
 logging = []
 smtp = []
 uid = []
+crypto = []
 
 [dependencies]
 serde = { version = "1.0.195", features = ["derive"] }

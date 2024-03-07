@@ -29,6 +29,9 @@ pub mod tests;
 #[cfg(feature = "uid")]
 pub mod uid;
 
+#[cfg(feature = "crypto")]
+pub mod crypto;
+
 pub enum Message {
     Max19DecimalPlaces,
 }
