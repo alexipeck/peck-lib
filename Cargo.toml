@@ -10,8 +10,8 @@ authors = ["Alexi Peck"]
 exclude = ["/target", "main.rs"]
 
 [features]
-default = []
-complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid"]
+default = ["complete"]
+complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto"]
 
 datetime = []
 env = []
