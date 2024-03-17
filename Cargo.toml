@@ -1,42 +1,42 @@
 [package]
-name = "peck-lib"
-version = "1.1.2"
-description = "A library of functions, traits, serde implementations for error handling, logging, hashing and datetime's."
-license = "MIT"
-edition = "2021"
-repository = "https://github.com/alexipeck/peck-lib/"
-categories = []
 authors = ["Alexi Peck"]
+categories = []
+description = "A library of functions, traits, serde implementations for error handling, logging, hashing and datetime's."
+edition = "2021"
 exclude = ["/target", "main.rs"]
+license = "MIT"
+name = "peck-lib"
+repository = "https://github.com/alexipeck/peck-lib/"
+version = "1.1.2"
 
 [features]
-default = ["complete"]
 complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto"]
+default = ["smtp"]
 
+crypto = []
 datetime = []
 env = []
 hashing = []
 http = []
 locking = []
 logging = []
-smtp = []
+smtp = ["lettre"]
 uid = []
-crypto = []
 
 [dependencies]
-serde = { version = "1.0.195", features = ["derive"] }
-serde_json = { version = "1.0.111" }
-chrono = "0.4.31"
-tracing-subscriber = { version = "0.3.18" }
-tracing = "0.1.40"
-reqwest = {version = "0.11.23", features = ["json"]}
-thiserror = "1.0.56"
 blake3 = "1.5.0"
-tokio = "1.35.1"
+chrono = "0.4.35"
 futures-util = "0.3.30"
+lettre = {version = "0.11.4", optional = true}
 parking_lot = "0.12.1"
-uuid = { version = "1.6.1", features = ["js", "v4", "serde"] }
-lettre = "0.11.3"
 rand = "0.8.5"
 rand_chacha = "0.3.1"
-rand_core = { version = "0.6.4", features = ["getrandom"] }
+rand_core = {version = "0.6.4", features = ["getrandom"]}
+reqwest = {version = "0.11.26", features = ["json"]}
+serde = {version = "1.0.197", features = ["derive"]}
+serde_json = {version = "1.0.114"}
+thiserror = "1.0.58"
+tokio = "1.36.0"
+tracing = "0.1.40"
+tracing-subscriber = {version = "0.3.18"}
+uuid = {version = "1.7.0", features = ["js", "v4", "serde"]}
