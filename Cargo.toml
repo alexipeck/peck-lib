@@ -11,7 +11,7 @@ version = "1.1.2"
 
 [features]
 complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto", "auth"]
-default = []
+default = ["auth"]
 
 auth = ["serde", "serde_json", "rsa", "email_address", "aead", "datetime", "chrono", "thiserror"]
 crypto = ["blake3", "rand", "rand_chacha", "rand_core", "chrono"]
