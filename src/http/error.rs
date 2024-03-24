@@ -1,7 +1,9 @@
+use crate::impl_error_wrapper;
 use reqwest::StatusCode;
 use thiserror::Error;
 
-use crate::error::{ReqwestError, SerdeJsonError};
+impl_error_wrapper!(ReqwestError, reqwest::Error);
+impl_error_wrapper!(SerdeJsonError, serde_json::error::Error);
 
 #[derive(Error, Debug)]
 pub enum Error {

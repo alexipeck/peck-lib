@@ -2,7 +2,7 @@ use reqwest::{Client, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use tracing::{debug, warn};
 
-use crate::error::{ReqwestError, SerdeJsonError};
+use crate::http::error::{ReqwestError, SerdeJsonError};
 
 use super::error::Error;
 

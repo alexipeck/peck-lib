@@ -10,33 +10,37 @@ repository = "https://github.com/alexipeck/peck-lib/"
 version = "1.1.2"
 
 [features]
-complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto"]
-default = ["smtp"]
+complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto", "auth"]
+default = []
 
-crypto = []
+auth = ["serde", "serde_json", "rsa", "email_address", "aead", "datetime", "chrono", "thiserror"]
+crypto = ["blake3", "rand", "rand_chacha", "rand_core", "chrono"]
 datetime = []
 env = []
-hashing = []
-http = []
-locking = []
-logging = []
-smtp = ["lettre"]
-uid = []
+hashing = ["blake3"]
+http = ["reqwest", "thiserror", "serde", "serde_json", "tracing"]
+locking = ["tokio", "parking_lot", "futures-util"]
+logging = ["chrono", "serde", "tracing", "tracing-subscriber", "tokio", "reqwest"]
+smtp = ["lettre", "thiserror"]
+uid = ["tokio", "uuid", "thiserror"]
 
 [dependencies]
-blake3 = "1.5.0"
-chrono = "0.4.35"
-futures-util = "0.3.30"
+aead = {version = "0.5.2", features = ["getrandom"], optional = true}
+blake3 = {version = "1.5.0", optional = true}
+chrono = {version = "0.4.35", optional = true}
+email_address = {version = "0.2.4", features = ["serde_support"], optional = true}
+futures-util = {version = "0.3.30", optional = true}
 lettre = {version = "0.11.4", optional = true}
-parking_lot = "0.12.1"
-rand = "0.8.5"
-rand_chacha = "0.3.1"
-rand_core = {version = "0.6.4", features = ["getrandom"]}
-reqwest = {version = "0.11.26", features = ["json"]}
-serde = {version = "1.0.197", features = ["derive"]}
-serde_json = {version = "1.0.114"}
-thiserror = "1.0.58"
-tokio = "1.36.0"
-tracing = "0.1.40"
-tracing-subscriber = {version = "0.3.18"}
-uuid = {version = "1.7.0", features = ["js", "v4", "serde"]}
+parking_lot = {version = "0.12.1", optional = true}
+rand = {version = "0.8.5", optional = true}
+rand_chacha = {version = "0.3.1", optional = true}
+rand_core = {version = "0.6.4", features = ["getrandom"], optional = true}
+reqwest = {version = "0.12.1", features = ["json"], optional = true}
+rsa = {version = "0.9.6", features = ["sha2", "serde", "std"], optional = true}
+serde = {version = "1.0.197", features = ["derive"], optional = true}
+serde_json = {version = "1.0.114", optional = true}
+thiserror = {version = "1.0.58", optional = true}
+tokio = {version = "1.36.0", features = ["sync"], optional = true}
+tracing = {version = "0.1.40", optional = true}
+tracing-subscriber = {version = "0.3.18", optional = true}
+uuid = {version = "1.7.0", features = ["js", "v4", "serde"], optional = true}

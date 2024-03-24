@@ -1,4 +1,3 @@
-use blake3::Hasher;
 use std::fmt;
 
 #[cfg(feature = "datetime")]
@@ -24,6 +23,9 @@ pub mod logging;
 #[cfg(feature = "smtp")]
 pub mod smtp;
 
+#[cfg(feature = "auth")]
+pub mod auth;
+
 pub mod tests;
 
 #[cfg(feature = "uid")]
@@ -47,13 +49,6 @@ impl fmt::Display for Message {
 pub enum Warning {
     F64(f64, Message),
     F32(f32, Message),
-}
-
-///hashes with blake3
-pub fn hash_string(data: &str) -> String {
-    let mut hasher = Hasher::new();
-    let _ = hasher.update(data.as_bytes());
-    hasher.finalize().to_string()
 }
 
 pub mod str {
