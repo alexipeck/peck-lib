@@ -15,11 +15,11 @@ use super::token_pair::TokenPair;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LoginFlow {
     token_pair: TokenPair,
-    public_encryption_key: String,
+    public_encryption_key: RsaPublicKey,
 }
 
 impl LoginFlow {
-    pub fn new(token_pair: TokenPair, public_encryption_key: String) -> Self {
+    pub fn new(token_pair: TokenPair, public_encryption_key: RsaPublicKey) -> Self {
         Self {
             token_pair,
             public_encryption_key,
@@ -31,7 +31,7 @@ impl LoginFlow {
     pub fn get_token(&self) -> &str {
         &self.token_pair.token
     }
-    pub fn get_public_encryption_key(&self) -> &str {
+    pub fn get_public_encryption_key(&self) -> &RsaPublicKey {
         &self.public_encryption_key
     }
 }
