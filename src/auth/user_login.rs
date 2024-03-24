@@ -10,7 +10,7 @@ use super::error::RSAError;
 use super::error::SerdeError;
 use super::token_pair::TokenPair;
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct LoginFlow {
     token_pair: TokenPair,
     public_encryption_key: String,
