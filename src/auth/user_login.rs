@@ -5,6 +5,8 @@ use rsa::Pkcs1v15Encrypt;
 use rsa::RsaPublicKey;
 use serde::{Deserialize, Serialize};
 
+use crate::datetime::r#trait::Expired;
+
 use super::error::Error;
 use super::error::RSAError;
 use super::error::SerdeError;
@@ -22,6 +24,15 @@ impl LoginFlow {
             token_pair,
             public_encryption_key,
         }
+    }
+    pub fn expired(&self) -> bool {
+        self.token_pair.expiry.expired()
+    }
+    pub fn get_token(&self) -> &str {
+        &self.token_pair.token
+    }
+    pub fn get_public_encryption_key(&self) -> &str {
+        &self.public_encryption_key
     }
 }
 
