@@ -243,7 +243,7 @@ where
         }
     };
     return match response.status() {
-        reqwest::StatusCode::OK => {
+        StatusCode::OK => {
             let response_text: String = match response.text().await {
                 Ok(response_text) => response_text,
                 Err(err) => {
