@@ -1,11 +1,11 @@
 use crate::impl_error_wrapper;
 #[cfg(not(target_arch = "wasm32"))]
-use reqwest::StatusCode;
+use reqwest::{Error as ReqwestError_, StatusCode};
 #[cfg(target_arch = "wasm32")]
-use reqwest_wasm::StatusCode;
+use reqwest_wasm::{Error as ReqwestError_, StatusCode};
 use thiserror::Error;
 
-impl_error_wrapper!(ReqwestError, reqwest::Error);
+impl_error_wrapper!(ReqwestError, ReqwestError_);
 impl_error_wrapper!(SerdeJsonError, serde_json::error::Error);
 
 #[derive(Error, Debug)]
