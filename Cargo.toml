@@ -11,7 +11,7 @@ version = "1.1.2"
 
 [features]
 complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto", "auth"]
-default = ["auth"]
+default = []
 
 auth = ["serde", "serde_json", "rsa", "email_address", "aead", "datetime", "chrono", "thiserror"]
 crypto = ["blake3", "rand", "rand_chacha", "rand_core", "chrono"]
@@ -19,6 +19,7 @@ datetime = []
 env = []
 hashing = ["blake3"]
 http = ["reqwest", "thiserror", "serde", "serde_json", "tracing"]
+#http_wasm = ["reqwest-wasm", "thiserror", "serde", "serde_json", "tracing"]
 locking = ["tokio", "parking_lot", "futures-util"]
 logging = ["chrono", "serde", "tracing", "tracing-subscriber", "tokio", "reqwest"]
 smtp = ["lettre", "thiserror"]
@@ -35,7 +36,6 @@ parking_lot = {version = "0.12.1", optional = true}
 rand = {version = "0.8.5", optional = true}
 rand_chacha = {version = "0.3.1", optional = true}
 rand_core = {version = "0.6.4", features = ["getrandom"], optional = true}
-reqwest = {version = "0.12.1", features = ["json"], optional = true}
 rsa = {version = "0.9.6", features = ["sha2", "serde", "std"], optional = true}
 serde = {version = "1.0.197", features = ["derive"], optional = true}
 serde_json = {version = "1.0.114", optional = true}
@@ -44,3 +44,9 @@ tokio = {version = "1.36.0", features = ["sync"], optional = true}
 tracing = {version = "0.1.40", optional = true}
 tracing-subscriber = {version = "0.3.18", optional = true}
 uuid = {version = "1.7.0", features = ["js", "v4", "serde"], optional = true}
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+reqwest-wasm = {version = "0.11.16", features = ["json"], default-features = false}
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+reqwest = {version = "0.12.2", features = ["json"], optional = true, default-features = false}

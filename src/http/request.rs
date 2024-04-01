@@ -1,10 +1,11 @@
+use super::error::Error;
+use crate::http::error::{ReqwestError, SerdeJsonError};
+#[cfg(not(target_arch = "wasm32"))]
 use reqwest::{Client, StatusCode};
+#[cfg(target_arch = "wasm32")]
+use reqwest_wasm::{Client, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use tracing::{debug, warn};
-
-use crate::http::error::{ReqwestError, SerdeJsonError};
-
-use super::error::Error;
 
 ///json
 pub async fn post_json<S, T>(
