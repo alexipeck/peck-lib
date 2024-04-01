@@ -1,5 +1,8 @@
 use crate::impl_error_wrapper;
+#[cfg(not(target_arch = "wasm32"))]
 use reqwest::StatusCode;
+#[cfg(target_arch = "wasm32")]
+use reqwest_wasm::StatusCode;
 use thiserror::Error;
 
 impl_error_wrapper!(ReqwestError, reqwest::Error);
