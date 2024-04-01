@@ -987,6 +987,7 @@ dependencies = [
  "chrono",
  "email_address",
  "futures-util",
+ "lazy_static",
  "lettre",
  "parking_lot",
  "rand",

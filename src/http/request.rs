@@ -1,11 +1,16 @@
 use super::error::Error;
 use crate::http::error::{ReqwestError, SerdeJsonError};
+use lazy_static::lazy_static;
 #[cfg(not(target_arch = "wasm32"))]
 use reqwest::{Client, StatusCode};
 #[cfg(target_arch = "wasm32")]
 use reqwest_wasm::{Client, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use tracing::{debug, warn};
+
+lazy_static! {
+    pub static ref CLIENT: Client = Client::new();
+}
 
 pub async fn post_json_no_serde<S>(
     url: &str,
