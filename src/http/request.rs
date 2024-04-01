@@ -7,6 +7,41 @@ use reqwest_wasm::{Client, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use tracing::{debug, warn};
 
+pub async fn post_json_no_serde<S>(
+    url: &str,
+    client: Client,
+    bearer_token: Option<&str>,
+    data: &S,
+) -> Result<(), Error>
+where
+    S: Serialize + ?Sized,
+{
+    let mut request = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&data);
+    if let Some(bearer_token) = bearer_token {
+        request = request.header("Authorization", format!("Bearer {}", bearer_token));
+    }
+    let response = match request.send().await {
+        Ok(response) => response,
+        Err(err) => {
+            warn!("{}", err);
+            return Err(Error::Send(ReqwestError(err)));
+        }
+    };
+    return match response.status() {
+        status if status == StatusCode::OK => Ok(()),
+        other => Err(Error::InvalidResponse(
+            other,
+            response
+                .text()
+                .await
+                .unwrap_or("Response was not text".into()),
+        )),
+    };
+}
+
 ///json
 pub async fn post_json<S, T>(
     url: &str,
