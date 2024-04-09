@@ -1,10 +1,9 @@
+use super::error::UIDAuthorityError;
 use std::{collections::HashSet, sync::Arc};
-
 use tokio::sync::Mutex;
 use uuid::Uuid;
 
-use super::error::UIDAuthorityError;
-
+#[derive(Debug)]
 pub struct UIDAuthority {
     registry: Arc<Mutex<HashSet<Uuid>>>,
 }
