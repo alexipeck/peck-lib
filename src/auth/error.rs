@@ -11,6 +11,4 @@ pub enum Error {
     SerialiseLoginCredentials(SerdeError),
     #[error("EncryptLoginCredentials({0})")]
     EncryptLoginCredentials(RSAError),
-    #[error("Parse2FACode")]
-    Parse2FACode,
 }
