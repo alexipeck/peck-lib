@@ -7,11 +7,11 @@ exclude = ["/target", "main.rs"]
 license = "MIT"
 name = "peck-lib"
 repository = "https://github.com/alexipeck/peck-lib/"
-version = "1.1.5"
+version = "1.1.6"
 
 [features]
 complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto", "auth"]
-default = []
+default = ["complete"]
 
 auth = ["serde", "serde_json", "rsa", "email_address", "aead", "datetime", "chrono", "thiserror"]
 crypto = ["blake3", "rand", "rand_chacha", "rand_core", "chrono"]
