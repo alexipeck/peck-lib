@@ -974,7 +974,7 @@ dependencies = [
 
 [[package]]
 name = "peck-lib"
-version = "1.1.7"
+version = "1.1.8"
 dependencies = [
  "aead",
  "blake3",
