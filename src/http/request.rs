@@ -213,11 +213,16 @@ where
     };
 }
 
-pub async fn get<T>(url: &str, client: Client, bearer_token: Option<&str>) -> Result<T, Error>
+pub async fn get<T>(
+    url: &str,
+    client: Client,
+    bearer_token: Option<&str>,
+    origin: Option<&str>,
+) -> Result<T, Error>
 where
     T: DeserializeOwned,
 {
-    get_debug(url, client, bearer_token, false).await
+    get_debug(url, client, bearer_token, origin, false).await
 }
 
 ///debug_text_output refers specifically to when deserialization fails
@@ -225,12 +230,16 @@ pub async fn get_debug<T>(
     url: &str,
     client: Client,
     bearer_token: Option<&str>,
+    origin: Option<&str>,
     debug_text_output: bool,
 ) -> Result<T, Error>
 where
     T: DeserializeOwned,
 {
     let mut request = client.get(url).header("accept", "application/json");
+    if let Some(origin) = origin {
+        request = request.header("Origin", origin);
+    }
     if let Some(bearer_token) = bearer_token {
         request = request.header("Authorization", format!("Bearer {}", bearer_token));
     }
