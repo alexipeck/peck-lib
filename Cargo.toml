@@ -7,11 +7,11 @@ exclude = ["/target", "main.rs"]
 license = "MIT"
 name = "peck-lib"
 repository = "https://github.com/alexipeck/peck-lib/"
-version = "1.1.8"
+version = "1.1.9"
 
 [features]
 complete = ["datetime", "env", "hashing", "http", "locking", "logging", "smtp", "uid", "crypto", "auth"]
-default = []
+default = ["complete"]
 
 auth = ["serde", "serde_json", "rsa", "email_address", "aead", "datetime", "chrono", "thiserror"]
 crypto = ["blake3", "rand", "rand_chacha", "rand_core", "chrono"]
@@ -47,7 +47,7 @@ tracing-subscriber = {version = "0.3.18", optional = true}
 uuid = {version = "1.8.0", features = ["js", "v4", "serde"], optional = true}
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-reqwest-wasm = {version = "0.11.16", features = ["json"], default-features = false}
+reqwest-wasm = {version = "0.11.16", features = ["json", "cookies", "gzip"]}
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-reqwest = {version = "0.12.4", features = ["json"], optional = true, default-features = false}
+reqwest = {version = "0.12.5", features = ["json", "cookies", "gzip"], optional = true}
