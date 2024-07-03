@@ -12,11 +12,6 @@ lazy_static! {
     pub static ref CLIENT: Client = Client::new();
 }
 
-lazy_static! {
-    ///avoid using in WASM environments
-    pub static ref CLIENT_WITH_COOKIE_STORE: Client = Client::builder().cookie_store(true).build().expect("An error occurred while building client.");
-}
-
 pub async fn post_json_no_serde<S>(
     url: &str,
     client: Client,
