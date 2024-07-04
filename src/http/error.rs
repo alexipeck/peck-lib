@@ -16,7 +16,7 @@ pub enum Error {
     ConvertResponseToText(ReqwestError),
     #[error("DeserializeTypeFromText({0})")]
     DeserializeTypeFromText(SerdeJsonError),
-    #[error("InvalidResponse({0}: {1})")]
+    #[error("InvalidResponse({0}: \"{1}\")")]
     InvalidResponse(StatusCode, String),
 }
 
