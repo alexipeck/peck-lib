@@ -27,7 +27,7 @@ uid = ["tokio", "uuid", "thiserror"]
 
 [dependencies]
 aead = {version = "0.5.2", features = ["getrandom"], optional = true}
-blake3 = {version = "1.5.1", optional = true}
+blake3 = {version = "1.5.3", optional = true}
 chrono = {version = "0.4.38", optional = true}
 email_address = {version = "0.2.5", features = ["serde_support"], optional = true}
 futures-util = {version = "0.3.30", optional = true}
@@ -38,13 +38,13 @@ rand = {version = "0.8.5", optional = true}
 rand_chacha = {version = "0.3.1", optional = true}
 rand_core = {version = "0.6.4", features = ["getrandom"], optional = true}
 rsa = {version = "0.9.6", features = ["sha2", "serde", "std"], optional = true}
-serde = {version = "1.0.203", features = ["derive"], optional = true}
+serde = {version = "1.0.204", features = ["derive"], optional = true}
 serde_json = {version = "1.0.120", optional = true}
-thiserror = {version = "1.0.61", optional = true}
-tokio = {version = "1.38.0", features = ["sync"], optional = true}
+thiserror = {version = "1.0.63", optional = true}
+tokio = {version = "1.39.2", features = ["sync"], optional = true}
 tracing = {version = "0.1.40", optional = true}
 tracing-subscriber = {version = "0.3.18", optional = true}
-uuid = {version = "1.9.1", features = ["js", "v4", "serde"], optional = true}
+uuid = {version = "1.10.0", features = ["js", "v4", "serde"], optional = true}
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 reqwest-wasm = {version = "0.11.16", features = ["json", "cookies", "gzip"]}
