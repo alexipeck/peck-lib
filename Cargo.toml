@@ -49,6 +49,16 @@ bloom = {version = "0.3.2", optional = true}
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 reqwest-wasm = {version = "0.11.16", features = ["json", "cookies", "gzip"]}
+# getrandom refuses to build for wasm*-unknown-unknown unless its "js" feature is
+# on, because those targets have no OS entropy source and it must be told to use
+# the Web Crypto API instead. Nothing here depends on getrandom directly: it
+# arrives under rand_core, which the crypto, auth and uid features all reach via
+# rand, rand_chacha, aead and rsa. A feature on a transitive dependency can only
+# be turned on by a direct dependency declaration, and cargo unifies features per
+# target, so this one line enables it for every route. Declared here rather than
+# left to each consumer so that peck-lib's crypto-bearing features work on wasm
+# out of the box, as reqwest-wasm above already does for http.
+getrandom = {version = "0.2.17", features = ["js"]}
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 reqwest = {version = "0.12.7", features = ["json", "cookies", "gzip"], optional = true}
